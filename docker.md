@@ -128,7 +128,9 @@ Just exit the shell, like you would usually do.
 
 What if we start a new container, and try to run figlet again?
 ```
-$ docker run -it ubuntu root@b13c164401fb:/\# figlet bash: figlet: command not found
+$ docker run -it ubuntu 
+root@b13c164401fb:/# figlet 
+bash: figlet: command not found
 ```
 -   We started a *brand new container*.
 
@@ -183,7 +185,8 @@ This container just displays the time every second.
 
 Containers can be started in the background, with the `-d` flag (daemon mode):
 ```
- $ docker run -d jpetazzo/clock 47d677dcfba4277c6cc68fcaa51f932b544cab1a187c853b7d0caf4e8debe5ad
+ $ docker run -d jpetazzo/clock 
+ 47d677dcfba4277c6cc68fcaa51f932b544cab1a187c853b7d0caf4e8debe5ad
 ```
 -   We don't see the output of the container.
 
@@ -192,16 +195,15 @@ Containers can be started in the background, with the `-d` flag (daemon mode):
 -   Docker gives us the ID of the container.
 
 
-**List running containers
+#### Step 3: List running containers
 
 How can we check that our container is still running?
 
-With docker ps, just like the UNIX ps command, lists running processes.
+With `docker ps`, just like the UNIX ps command, lists running processes.
 ```
-| $ docker ps  | IMAGE            | ... | CREATED         | STATUS           | ... |     |
-|--------------|------------------|-----|-----------------|------------------|-----|-----|
-| CONTAINER ID |                  |     |                 |                  |     |     |
-| 47d677dcfba4 | jpetazzo/clock   | ... | 2 minutes ago   | Up 2 minutes ... |     |
+$ docker ps
+  CONTAINER ID  IMAGE           ...  CREATED        STATUS        ...
+  47d677dcfba4  jpetazzo/clock  ...  2 minutes ago  Up 2 minutes  ...
 ```
 Docker tells us:
 
@@ -214,41 +216,49 @@ Docker tells us:
 -   Other information (COMMAND, PORTS, NAMES) that we will explain later.
 
 
- Starting more containers
+#### Step 4: Starting more containers
 
 Let's start two more containers.
 ```
- $ docker run -d jpetazzo/clock 57ad9bdfc06bb4407c47220cf59ce21585dce9a1298d7a67488359aeaea8ae2a $ docker run -d jpetazzo/clock 068cc994ffd0190bbe025ba74e4c0771a5d8f14734af772ddee8dc1aaf20567d
+ $ docker run -d jpetazzo/clock 
+ 57ad9bdfc06bb4407c47220cf59ce21585dce9a1298d7a67488359aeaea8ae2a 
+ 
+ $ docker run -d jpetazzo/clock 
+ 068cc994ffd0190bbe025ba74e4c0771a5d8f14734af772ddee8dc1aaf20567d
 ```
-Check that docker ps correctly reports all 3 containers.
+Check that `docker ps` correctly reports all 3 containers.
 
 
-Two useful flags for docker ps
+#### Step 5: Two useful flags for `docker ps`
 
 To see only the last container that was started:
 ```
-| $ docker ps -l | IMAGE          | ... | CREATED         | STATUS           | ... |     |
-|----------------|----------------|-----|-----------------|------------------|-----|-----|
-| CONTAINER ID   |                |     |                 |                  |     |     |
-| 068cc994ffd0   | jpetazzo/clock | ... | 2 minutes ago   | Up 2 minutes ... |     |
+ $ docker ps -l
+ CONTAINER ID  IMAGE           ...  CREATED        STATUS        ...
+ 068cc994ffd0  jpetazzo/clock  ...  2 minutes ago  Up 2 minutes  ...
 ```
 To see only the ID of containers:
 ```
- $ docker ps -q 068cc994ffd0 57ad9bdfc06b 47d677dcfba4
+ $ docker ps -q 
+ 068cc994ffd0 
+ 57ad9bdfc06b 
+ 47d677dcfba4
 ```
 Combine those flags to see only the ID of the last container started!
 ```
- $ docker ps -lq 068cc994ffd0
+ $ docker ps -lq 
+ 068cc994ffd0
 ```
 
- View the logs of a container
+#### Step 6: View the logs of a container
 
 We told you that Docker was logging the container output.
 
 Let's see that now.
 ```
  $ docker logs 068
- Fri Feb 20 00:39:52 UTC Fri Feb 20 00:39:53 UTC
+ Fri Feb 20 00:39:52 UTC 
+ Fri Feb 20 00:39:53 UTC
  ...
 ```
 -   We specified a *prefix* of the full container ID.
@@ -257,20 +267,23 @@ Let's see that now.
 
 -   The logs command will output the *entire* logs of the container. (Sometimes, that will be too much. Let's see how to address that.)
 
-#### View only the tail of the logs
+#### Step 7: View only the tail of the logs
 
 To avoid being spammed with eleventy pages of output, we can use the --tail option:
 ```
- $ docker logs --tail 3 068 Fri Feb 20 00:55:35 UTC Fri Feb 20 00:55:36 UTC Fri Feb 20 00:55:37 UTC
+ $ docker logs --tail 3 068 
+ Fri Feb 20 00:55:35 UTC 
+ Fri Feb 20 00:55:36 UTC 
+ Fri Feb 20 00:55:37 UTC
 ```
 -   The parameter is the number of lines that we want to see.
 
+#### Step 8: Follow the logs in real time
 
- Follow the logs in real time
-
-Just like with the standard UNIX command tail -f, we can follow the logs of our container:
+Just like with the standard UNIX command `tail -f`, we can `follow` the logs of our container:
 ```
- $ docker logs --tail 1 --follow 068 Fri Feb 20 00:57:12 UTC
+ $ docker logs --tail 1 --follow 068 
+ Fri Feb 20 00:57:12 UTC
  Fri Feb 20 00:57:13 UTC ^C
 ```
 -   This will display the last line in the log file.
@@ -279,14 +292,13 @@ Just like with the standard UNIX command tail -f, we can follow the logs of our 
 
 -   Use ^C to exit.
 
-
- Stop our container
+#### Step 9: Stop our container
 
 There are two ways we can terminate our detached container.
 
- • Killing it using the docker kill command.
+ • Killing it using the `docker kill` command.
 
--   Stopping it using the docker stop command.
+-   Stopping it using the `docker stop` command.
 
 The first one stops the container immediately, by using the KILL signal.
 
@@ -294,12 +306,12 @@ The second one is more graceful. It sends a TERM signal, and after 10 seconds, i
 
 Reminder: the KILL signal cannot be intercepted, and will forcibly terminate the container.
 
-
- Stopping our containers
+*Stopping our containers*
 
 Let's stop one of those containers:
 ```
- $ docker stop 47d6 47d6
+ $ docker stop 47d6 
+ 47d6
 ```
 This will take 10 seconds:
 
@@ -311,12 +323,12 @@ This will take 10 seconds:
 
 -   this terminates the container.
 
-
- Killing the remaining containers
+*Killing the remaining containers*
 
 Let's be less patient with the two other containers:
 ```
- $ docker kill 068 57ad 068
+ $ docker kill 068 57ad 
+ 068
  57ad
 ```
 The stop and kill commands can take multiple container IDs.
@@ -328,17 +340,17 @@ Those containers will be terminated immediately (without the 10 seconds delay). 
 
  List stopped containers
 
-We can also see stopped containers, with the -a (--all) option.
+We can also see stopped containers, with the ```-a (--all)``` option.
 ```
-| $ docker ps -a | IMAGE          | ... | CREATED   | STATUS     |                          |               |            |
-|----------------|----------------|-----|-----------|------------|--------------------------|---------------|------------|
-| CONTAINER ID   |                |     |           |            |                          | min. ago      |            |
-| 068cc994ffd0   | jpetazzo/clock | ... | 21        | min. ago   | Exited (137) 3           |               |            |
-| 57ad9bdfc06b   | jpetazzo/clock | ... | 21        | min. ago   | Exited (137)             | 3             | min. ago   |
-| 47d677dcfba4   | jpetazzo/clock | ... | 23        | min. ago   | Exited (137)             | 3             | min. ago   |
-| 5c1dfd4d81f1   | jpetazzo/clock | ... | 40        | min. ago   | Exited (0) 40 min. ago   |               |
-| b13c164401fb   | ubuntu         | ... | 55        | min. ago   | Exited (130)             | 53 min. ago   |            |
+$ docker ps -a
+    CONTAINER ID  IMAGE           ...  CREATED      STATUS
+    068cc994ffd0  jpetazzo/clock  ...  21 min. ago  Exited (137) 3 min. ago
+    57ad9bdfc06b  jpetazzo/clock  ...  21 min. ago  Exited (137) 3 min. ago
+    47d677dcfba4  jpetazzo/clock  ...  23 min. ago  Exited (137) 3 min. ago
+    5c1dfd4d81f1  jpetazzo/clock  ...  40 min. ago  Exited (0) 40 min. ago
+    b13c164401fb  ubuntu          ...  55 min. ago  Exited (130) 53 min. ago
 ```
+
 ## Lab 3: Restarting and Attaching to Containers
 
 #### Objectives
