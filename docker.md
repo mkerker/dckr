@@ -355,14 +355,13 @@ $ docker ps -a
 
 #### Objectives
 
-We have started containers in the foreground, and in the background. In this chapter, we will see how to:
+We have started containers in the foreground, and in the background. In this lab, we will see how to:
 
 -   Put a container in the background.
 
 -   Attach to a background container to bring it to the foreground.
 
 -   Restart a stopped container.
-
 
  Background and foreground
 
@@ -373,9 +372,9 @@ All containers run the same way, whether there is a client attached to them or n
 Analogy: attaching to a container is like plugging a keyboard and screen to a physical server.
 
 
- Detaching from a container
+#### Step 1: Detaching from a container
 
--   If you have started an *interactive* container (with option -it), you can detach from it.
+-   If you have started an *interactive* container (with option `-it`), you can detach from it.
 
 -   The "detach" sequence is ^P^Q.
 
@@ -383,17 +382,17 @@ Analogy: attaching to a container is like plugging a keyboard and screen to a ph
 
  (But not by hitting ^C, as this would deliver SIGINT to the container.)
 
-What does -it stand for?
+What does `-it` stand for?
 
--   -t means "allocate a terminal."
+-   `-t` means "allocate a terminal."
 
--   -i means "connect stdin to the terminal."
+-   `-i` means "connect stdin to the terminal."
 
-Specifying a custom detach sequence
+#### Specifying a custom detach sequence
 
 -   You don't like ^P^Q? No problem!
 
- • You can change the sequence with docker run --detach-keys.
+ • You can change the sequence with `docker run --detach-keys`.
 
  • This can also be passed as a global option to the engine.
 
@@ -408,7 +407,7 @@ Check that our container is still running:
  $ docker ps -l
 ```
 
- Attaching to a container
+#### Step 2: Attaching to a container
 
 You can attach to a container:
 ```
@@ -437,7 +436,7 @@ Check that ^X x doesn't work, but ^P ^Q does.
 -   Remember: you can always detach by killing the Docker client.
 
 
- Checking container output
+#### Step 3: Checking container output
 
 • Use docker attach if you intend to send input to the container.
 
@@ -445,7 +444,8 @@ Check that ^X x doesn't work, but ^P ^Q does.
 ```
 $ docker logs --tail 1 --follow <containerID>
 ```
- Restarting a container
+ 
+#### Step 4: Restarting a container
 
 When a container has exited, it is in stopped state.
 
@@ -461,27 +461,27 @@ You can re-attach to it if you want to interact with it:
 ```
 Use `docker ps -a` to identify the container ID of a previous jpetazzo/clock container, and try those commands.
 
- Attaching to a REPL
+> Attaching to a REPL
 
--   REPL = Read Eval Print Loop
+> -   REPL = Read Eval Print Loop
 
--   Shells, interpreters, TUI ...
+> -   Shells, interpreters, TUI ...
 
--   Symptom: you docker attach, and see nothing
+> -   Symptom: you docker attach, and see nothing
 
--   The REPL doesn't know that you just attached, and doesn't print anything
+> -   The REPL doesn't know that you just attached, and doesn't print anything
 
--   Try hitting ^L or Enter
+> -   Try hitting ^L or Enter
 
- SIGWINCH
+> SIGWINCH
 
--   When you docker attach, the Docker Engine sends a couple of SIGWINCH signals to the container.
+> -   When you docker attach, the Docker Engine sends a couple of SIGWINCH signals to the container.
 
--   SIGWINCH = WINdow CHange; indicates a change in window size.
+> -   SIGWINCH = WINdow CHange; indicates a change in window size.
 
--   This will cause some CLI and TUI programs to redraw the screen.
+> -   This will cause some CLI and TUI programs to redraw the screen.
 
--   But not all of them.
+> -   But not all of them.
 
 
 ## Lab 4: Understanding Docker Images
