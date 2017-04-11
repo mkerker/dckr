@@ -1,3 +1,4 @@
+# Docker
 
 * Lab 1: Our First Containers
 * Lab 2: Background Containers
@@ -36,7 +37,7 @@ Docker is a client-server application.
 
  The Docker daemon talks to it via the registry API.
 
-#### Hello World
+#### Step 1: Hello World
 
 In your Docker environment, just run the following command:
 ```
@@ -51,7 +52,7 @@ That was our first container!
 
 -   We ran a single process and echo'ed hello world.
 
-A more useful container
+#### Step2: A more useful container
 
 Let's run a more exciting container:
 ```
@@ -77,15 +78,14 @@ bash: figlet: command not found
 ```
 Alright, we need to install it.
 
-
 An obvservation
 
 Let's check how many packages are installed here.
 ```
-root@04c0bb0a6c07:/
-\# dpkg -l | wc -l 189
+root@04c0bb0a6c07:/# dpkg -l | wc -l 
+189
 ```
- • `dpkg -l `lists the packages installed in our container
+ • `dpkg -l` lists the packages installed in our container
 
 -   `wc -l` counts them
 
@@ -94,19 +94,19 @@ root@04c0bb0a6c07:/
 
 We want figlet, so let's install it:
 ```
-root@04c0bb0a6c07:/\# apt-get update
-
+root@04c0bb0a6c07:/# apt-get update
 ...
 
 Fetched 1514 kB in 14s (103 kB/s) Reading package lists... Done
 
-root@04c0bb0a6c07:/\# apt-get install figlet Reading package lists... Done
+root@04c0bb0a6c07:/# apt-get install figlet Reading package lists... Done
 
 ...
 ```
 One minute later, figlet is installed!
 ```
- # figlet hello _ __
+ # figlet hello
+     _          _ __
     | |__   ___| | | ___
     | '_ \ / _ \ | |/ _ \
     | | | |  __/ | | (_) |
@@ -118,9 +118,9 @@ Exiting our container
 Just exit the shell, like you would usually do.
 
 (E.g. with ^D or exit)
-
- root@04c0bb0a6c07:/\# exit
-
+```
+ root@04c0bb0a6c07:/# exit
+```
 -   Our container is now in a *stopped* state.
 
 -   It still exists on disk, but all compute resources have been freed up.
@@ -158,13 +158,14 @@ We will now see how to:
 -   List stopped containers.
 
 
- A non-interactive container
+#### Step 1: A non-interactive container
 
 We will run a small custom container.
 
 This container just displays the time every second.
 ```
- $ docker run jpetazzo/clock Fri Feb 20 00:28:53 UTC Fri Feb 20 00:28:54 UTC Fri Feb 20 00:28:55 UTC
+ $ docker run jpetazzo/clock 
+ Fri Feb 20 00:28:53 UTC Fri Feb 20 00:28:54 UTC Fri Feb 20 00:28:55 UTC
  ...
 ```
 -   This container will run forever.
@@ -178,9 +179,9 @@ This container just displays the time every second.
 -   We will hear more about user images (and other types of images) later.
 
 
- Run a container in the background
+#### Step 2: Run a container in the background
 
-Containers can be started in the background, with the -d flag (daemon mode):
+Containers can be started in the background, with the `-d` flag (daemon mode):
 ```
  $ docker run -d jpetazzo/clock 47d677dcfba4277c6cc68fcaa51f932b544cab1a187c853b7d0caf4e8debe5ad
 ```
@@ -191,7 +192,7 @@ Containers can be started in the background, with the -d flag (daemon mode):
 -   Docker gives us the ID of the container.
 
 
- List running containers
+**List running containers
 
 How can we check that our container is still running?
 
