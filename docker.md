@@ -106,9 +106,9 @@ root@04c0bb0a6c07:/# apt-get install figlet Reading package lists... Done
 One minute later, figlet is installed!
 ```
  # figlet hello
-     _          _ __
+     _          _ _
     | |__   ___| | | ___
-    | '_ \ / _ \ | |/ _ \
+    |  _ \ / _ \ | |/ _ \
     | | | |  __/ | | (_) |
     |_| |_|\___|_|_|\___/
 ```
