@@ -52,7 +52,7 @@ That was our first container!
 
 -   We ran a single process and echo'ed hello world.
 
-#### Step2: A more useful container
+#### Step 2: A more useful container
 
 Let's run a more exciting container:
 ```
@@ -73,7 +73,7 @@ Do something in our container
 
 Try to run figlet in our container.
 ```
-root@04c0bb0a6c07:/\# figlet hello
+root@04c0bb0a6c07:/# figlet hello
 bash: figlet: command not found
 ```
 Alright, we need to install it.
@@ -796,7 +796,7 @@ Building from a base
 
 Our base will be the ubuntu image.
 
- Create a new container and make some changes
+#### Step 1: Create a new container and make some changes
 
 Start an Ubuntu container:
 ```
@@ -1112,4 +1112,4 @@ $ docker history figlet
 
 -   String syntax specifies a command to be wrapped within /bin/sh -c "...".
 
-End of Docker labs
+## End of the Docker labs :-)
