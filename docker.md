@@ -1112,4 +1112,42 @@ $ docker history figlet
 
 -   String syntax specifies a command to be wrapped within /bin/sh -c "...".
 
+
+
+
+
+
+#### Lab 7: PUSH PULL Image to a Local Registry
+
+For this step, we'll need to launch a local registry in a container:
+```
+docker run -d -p 5000:5000 --name registry registry:2
+```
+Then tag your image under the registry namespace and push it there:
+```
+ $ REGISTRY=localhost:5000
+ $ docker tag hello-world $REGISTRY/$(whoami)/hello-world
+ $ docker push $REGISTRY/$(whoami)/hello-world
+```
+tag: Tag an image into a repository
+push: Push an image or a repository to a Docker registry server
+
+REMOVE Image
+```
+ $ docker images
+```
+
+```
+ $ docker rmi <containerId>
+```
+
+Nowe PULL the Image from the Local Repository.
+
+```
+ $ docker pull $REGISTRY/$(whoami)/hello-world
+ $ docker run -d -P --name=registry-hello $REGISTRY/$(whoami)/hello-world
+```
+
+Lets see
+
 ## End of the Docker labs :-)
