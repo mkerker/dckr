@@ -6,6 +6,7 @@
 * Lab 4: Understanding Docker Images
 * Lab 5: Building Images Interactively
 * Lab 6: Building Docker images
+* Lab 7: Push a 
 
 ## Lab 1: Our First Containers
 
@@ -756,7 +757,7 @@ Do specify tags:
 
 -   To ensure repeatability later.
 
-Later on we have a lab to tag a image. 
+In the next lab we tag an image. 
 
 #### Section summary
 
@@ -784,7 +785,7 @@ We will:
 
 -   Learn about new commands: docker commit, docker tag, and docker diff.
 
- Building Images Interactively
+**Building Images Interactively**
 
 As we have seen, the images on the Docker Hub are sometimes very basic. How do we want to construct our own images?
 
@@ -809,15 +810,15 @@ Run the command apt-get update to refresh the list of packages available to inst
 
 Then run the command apt-get install figlet to install the program we are interested in.
 ```
- root@<yourContainerId>:\#/ apt-get update && apt-get install figlet
+ root@<yourContainerId>:\# apt-get update && apt-get install figlet
 
  .... OUTPUT OF APT-GET COMMANDS ....
 ```
- Inspect the changes
+#### Step 2: Inspect the changes
 
 Type exit at the container prompt to leave the interactive session.
 
-Now let's run docker diff to see the difference between the base image and our container.
+Now let's run `docker diff` to see the difference between the base image and our container.
 ```
  $ docker diff <yourContainerId>
  C /root
@@ -841,26 +842,27 @@ As explained before:
 
  (i.e. starting a container based on a big image doesn't incur a huge copy.)
 
- Commit and run your image
+#### Step 3: Commit and run your image
 
 The docker commit command will create a new layer with those changes, and a new image using this new layer.
 ```
- $ docker commit <yourContainerId> <newImageId>
+ $ docker commit <yourContainerId> 
+ <newImageId>
 ```
 The output of the docker commit command will be the ID for your newly created image.
 
 We can run this image:
 ```
  $ docker run -it <newImageId>
- root@fcfb62f0bfde:/\# figlet hello
-
-| |__   ___| | | ___
-| '_ \ / _ \ | |/_ \
-| | | | __/ | | (_) |
-|_| |_|\___|_|_|\___/
+ root@fcfb62f0bfde:/# figlet hello
+     _          _ _
+    | |__   ___| | | ___
+    |  _ \ / _ \ | |/ _ \
+    | | | |  __/ | | (_) |
+    |_| |_|\___|_|_|\___/
 ```
 
-**Tagging images**
+#### Step 4: Tagging images
 
 Referring to an image by its ID is not convenient. Let's tag it instead. We can use the tag command:
 ```
@@ -874,7 +876,7 @@ And then run it using its tag:
 ```
  $ docker run -it figlet
 ```
- What's next?
+**What's next?**
 
 Manual process = bad.
 
@@ -922,13 +924,13 @@ FROM ubuntu
 RUN apt-get update
 RUN apt-get install figlet
 ```
+
 -   FROM indicates the base image for our build.
 
 -   Each RUN line will be executed by Docker during the build.
 
 -   Our RUN commands **must be non-interactive.**
-
- (No input can be provided to Docker during the build.)
+    (No input can be provided to Docker during the build.)
 
 -   In many cases, we will add the -y flag to apt-get.
 
@@ -968,7 +970,7 @@ The output of docker build looks like this:
 
 Sending build context to Docker daemon 2.048 kB
 
- • The build context is the . directory given to docker build.
+-   The build context is the . directory given to docker build.
 
 -   It is sent (as an archive) by the Docker client to the Docker daemon.
 
@@ -1019,17 +1021,15 @@ You can force a rebuild with docker build --no-cache ....
  Running the image
 
 The resulting image is not different from the one produced manually.
-
- $ docker run -ti figlet root@91f3c974c9a1:/\# figlet hello
-
-| \_      | \_ \_              |
-|---------|--------------------|
-| | |\_\_ | \_\_\_| | | \_\_\_ |
-
- | '\_ \\ / \_ \\ | |/ \_ \\
-
- | | | | \_\_/ | | (\_) | |\_| |\_|\\\_\_\_|\_|\_|\\\_\_\_/
-
+```
+ $ docker run -ti figlet 
+ root@91f3c974c9a1:/# figlet hello
+     _          _ _
+    | |__   ___| | | ___
+    |  _ \ / _ \ | |/ _ \
+    | | | |  __/ | | (_) |
+    |_| |_|\___|_|_|\___/
+```
 -   Sweet is the taste of success!
 
 
@@ -1040,7 +1040,7 @@ The history command lists all the layers composing an image.
 For each layer, it shows its creation time, size, and creation command.
 
 When an image was built with a Dockerfile, each layer corresponds to a line of the Dockerfile.
-
+```
 $ docker history figlet
 
 | IMAGE           | CREATED             |
@@ -1061,7 +1061,7 @@ $ docker history figlet
 | /bin/sh -c echo '\#!/bin/sh'     | 194.5   | kB   |     |
 | /bin/sh -c \#(nop) ADD file:b    | 187.8   | MB   |     |
 
-
+```
 Introducing JSON syntax
 
 Most Dockerfile arguments can be passed in two forms:
