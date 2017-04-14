@@ -5,8 +5,8 @@
 * Lab 3: Restarting and Attaching to Containers
 * Lab 4: Understanding Docker Images
 * Lab 5: Building Images Interactively
-* Lab 6: Building Docker images
-* Lab 7: Push a 
+* Lab 6: Building Docker Images
+* Lab 7: Operations with images
 
 ## Lab 1: Our First Containers
 
