@@ -24,19 +24,19 @@ Docker is a client-server application.
 
 -   **The Docker Engine (or "daemon")**
 
- Receives and processes incoming Docker API requests.
+ -- Receives and processes incoming Docker API requests.
 
 -   **The Docker client**
 
- Talks to the Docker daemon via the Docker API.
+ -- Talks to the Docker daemon via the Docker API.
 
- We'll use mostly the CLI embedded within the docker binary.
+ -- We'll use mostly the CLI embedded within the docker binary.
 
 -   **Docker Hub Registry**
 
- Collection of public images.
+-- Collection of public images.
 
- The Docker daemon talks to it via the registry API.
+-- The Docker daemon talks to it via the registry API.
 
 #### Step 1: Hello World
 
@@ -79,7 +79,7 @@ bash: figlet: command not found
 ```
 Alright, we need to install it.
 
-**An obvservation**
+**An observation**
 
 Let's check how many packages are installed here.
 ```
@@ -299,9 +299,9 @@ Just like with the standard UNIX command `tail -f`, we can `follow` the logs of 
 
 There are two ways we can terminate our detached container.
 
- • Killing it using the `docker kill` command.
+-  Killing it using the `docker kill` command.
 
--   Stopping it using the `docker stop` command.
+-  Stopping it using the `docker stop` command.
 
 The first one stops the container immediately, by using the KILL signal.
 
@@ -341,7 +341,7 @@ Those containers will be terminated immediately (without the 10 seconds delay). 
  $ docker ps
 ```
 
- List stopped containers
+ **List stopped containers**
 
 We can also see stopped containers, with the ```-a (--all)``` option.
 ```
@@ -553,6 +553,7 @@ Object-oriented programming
 -   Containers are conceptually similar to *instances*.
 
 **Wait a minute...**
+
 If an image is read-only, how do we change it?
 
 -   We don't.
@@ -947,7 +948,7 @@ Save our file, then execute:
 
 -   `.` indicates the location of the *build context*.
 
--   `:v1` tag version 1.
+-   `:v1` tag it with a version number.
 
  (We will talk more about the build context later; but to keep things simple: this is the directory where our Dockerfile is located.)
 
@@ -1028,7 +1029,7 @@ You can force a rebuild with `docker build --no-cache` ....
 
 The resulting image is not different from the one produced manually.
 ```
- $ docker run -ti figlet 
+ $ docker run -ti figlet:v1
  root@91f3c974c9a1:/# figlet hello
      _          _ _
     | |__   ___| | | ___
@@ -1049,6 +1050,7 @@ When an image was built with a Dockerfile, each layer corresponds to a line of t
 ```
 $ docker history figlet:v1
 
+<OUTPUT>
 ```
 #### Step 4: Introducing JSON syntax
 
@@ -1060,7 +1062,7 @@ Most Dockerfile arguments can be passed in two forms:
 
 -   JSON list:
 
-    `RUN \["apt-get", "install", "figlet"\]`
+    `RUN ["apt-get", "install", "figlet"]`
 
 Let's change our Dockerfile as follows!
 
@@ -1075,6 +1077,7 @@ Let's change our Dockerfile as follows!
 Then build the new Dockerfile.
 ```
  $ docker build -t figlet:v2 .
+ <output>
 ```
 
 **JSON syntax vs string syntax**
@@ -1136,7 +1139,8 @@ Lets see
 You are already familiar with one command, `docker images`. You can also remove images, tag and untag them.
 
 #### Step 1: Build a new version
-First let build the new figlet v3 from Dockerfile.
+
+First let build the new figlet v3 from Dockerfile, so that we have more versions.
 ```
  $ docker build -t figlet:v3 .
 ```
@@ -1156,11 +1160,7 @@ Actually, Docker keeps track of all containers, even those that have stopped:
 
 ```
 $ docker ps -a
-CONTAINER ID        IMAGE                        COMMAND                   CREATED             STATUS                           PORTS                    NAMES
-292d1e8d5103        myubuntu                     "curl https://google."    5 minutes ago       Exited (0) 5 minutes ago                                  cranky_lalande
-f79c361a24f9        440a0da6d69e                 "/bin/sh -c curl"         5 minutes ago       Exited (2) 5 minutes ago                                  nauseous_sinoussi
-01825fd28a50        440a0da6d69e                 "/bin/sh -c curl --he"    6 minutes ago       Exited (2) 5 minutes ago                                  high_davinci
-95ffb2131c89        440a0da6d69e                 "/bin/sh -c curl http"    6 minutes ago       Exited (2) 6 minutes ago                                  lonely_sinoussi
+(OUTPUT)
 ```
 
 We can now delete the container:
@@ -1173,16 +1173,18 @@ $ docker rm 292d1e8d5103
 and the image:
 
 ```
-$ docker rmi myubuntu
-Untagged: myubuntu:latest
-Deleted: sha256:50928f386c704610fb16d3ca971904f3150f3702db962a4770958b8bedd9759b
+$ docker rmi figlet:v1
+
+
+output
+
 ```
 
 #### Step 2: Tagging images
 
 `docker tag` helps us to tag images.
 
-We have quite a lot of versions of `figlet` built, but latest still points to the old `v1`.
+We have a lot of versions of `figlet` built, but latest still points to the old `v1`.
 
 ```
 $ docker images | grep figlet
@@ -1223,11 +1225,13 @@ $ docker run -p 5000:5000 --name registry -d registry:2
 To instruct where we want to publish, we need to append registry address to repository name:
 
 ```
-$ docker tag hello:v7 127.0.0.1:5000/hello:v7
-$ docker push 127.0.0.1:5000/hello:v7
+$ docker tag figlet:v3 127.0.0.1:5000/figlet:v3
+$ docker push 127.0.0.1:5000/figlet:v3
 ```
 
 `docker push` pushed the image to our "remote" registry.
+
+
 
 We can now download the image using the `docker pull` command:
 
