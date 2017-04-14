@@ -1129,7 +1129,7 @@ Nowe PULL the Image from the Local Repository.
 Lets see
 
 
-### Operations with images
+## Lab 7: Operations with images
 
 You are already familiar with one command, `docker images`. You can also remove images, tag and untag them.
 
@@ -1152,7 +1152,7 @@ Error response from daemon: conflict: unable to remove repository reference "fig
 Docker complains that there are containers using this image. How is this possible? We thought that all our containers are gone.
 Actually, Docker keeps track of all containers, even those that have stopped:
 
-```bash
+```
 $ docker ps -a
 CONTAINER ID        IMAGE                        COMMAND                   CREATED             STATUS                           PORTS                    NAMES
 292d1e8d5103        myubuntu                     "curl https://google."    5 minutes ago       Exited (0) 5 minutes ago                                  cranky_lalande
@@ -1163,20 +1163,20 @@ f79c361a24f9        440a0da6d69e                 "/bin/sh -c curl"         5 min
 
 We can now delete the container:
 
-```bash
+```
 $ docker rm 292d1e8d5103
 292d1e8d5103
 ```
 
 and the image:
 
-```bash
+```
 $ docker rmi myubuntu
 Untagged: myubuntu:latest
 Deleted: sha256:50928f386c704610fb16d3ca971904f3150f3702db962a4770958b8bedd9759b
 ```
 
-**Tagging images**
+#### Step 2: Tagging images
 
 `docker tag` helps us to tag images.
 
@@ -1192,7 +1192,7 @@ figlet                                             v1                  b7fa8e201
 
 Let's change that by re-tagging `latest` to `v7`:
 
-```bash
+```
 $ docker tag hello:v7 hello:latest
 $ docker images | grep hello
 hello                                         latest              d0ec3cfed6f7        38 minutes ago      1.11 MB
@@ -1207,12 +1207,12 @@ hello                                         v2                  195aa31a5e4d  
 Both `v7` and `latest` point to the same image ID `d0ec3cfed6f7`.
 
 
-**Publishing images**
+#### Step 3: Publishing images
 
 Images are distributed with a special service - `docker registry`.
 Let us spin up a local registry:
 
-```bash
+```
 $ docker run -p 5000:5000 --name registry -d registry:2
 ```
 
@@ -1229,12 +1229,13 @@ $ docker push 127.0.0.1:5000/hello:v7
 
 We can now download the image using the `docker pull` command:
 
-```bash
+```
 $ docker pull 127.0.0.1:5000/hello:v7
 v7: Pulling from hello
 Digest: sha256:c472a7ec8ab2b0db8d0839043b24dbda75ca6fa8816cfb6a58e7aaf3714a1423
 Status: Image is up to date for 127.0.0.1:5000/hello:v7
 ```
 
+rmi v1, v2 etc
 
 ## End of the Docker labs :-)
