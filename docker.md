@@ -63,7 +63,7 @@ $ docker run -it ubuntu
 
 -   It runs a bare-bones, no-frills ubuntu system.
 
- • `-it` is shorthand for `-i -t`.
+- `-it` is shorthand for `-i -t`.
 
 -   `-i` tells Docker to connect us to the container's stdin.
 
@@ -79,18 +79,18 @@ bash: figlet: command not found
 ```
 Alright, we need to install it.
 
-An obvservation
+**An obvservation**
 
 Let's check how many packages are installed here.
 ```
 root@04c0bb0a6c07:/# dpkg -l | wc -l 
 189
 ```
- • `dpkg -l` lists the packages installed in our container
+- `dpkg -l` lists the packages installed in our container
 
--   `wc -l` counts them
+- `wc -l` counts them
 
--   If you have a Debian or Ubuntu machine, you can run the same command and compare the results.
+- If you have a Debian or Ubuntu machine, you can run the same command and compare the results.
 
 
 We want figlet, so let's install it:
@@ -98,9 +98,11 @@ We want figlet, so let's install it:
 root@04c0bb0a6c07:/# apt-get update
 ...
 
-Fetched 1514 kB in 14s (103 kB/s) Reading package lists... Done
+Fetched 1514 kB in 14s (103 kB/s) 
+Reading package lists... Done
 
-root@04c0bb0a6c07:/# apt-get install figlet Reading package lists... Done
+root@04c0bb0a6c07:/# apt-get install figlet
+Reading package lists... Done
 
 ...
 ```
