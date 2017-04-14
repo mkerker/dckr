@@ -896,7 +896,7 @@ At the end of this lab, you will be able to:
 
 -   Build an image from a Dockerfile.
 
- Dockerfile overview
+** Dockerfile overview
 
 -   A Dockerfile is a build recipe for a Docker image.
 
@@ -904,16 +904,17 @@ At the end of this lab, you will be able to:
 
 -   The docker build command builds an image from a Dockerfile.
 
-Writing our first Dockerfile
+#### Step 1: Writing our first Dockerfile
 
 Our Dockerfile must be in a **new, empty directory**.
 
-1.  Create a directory to hold our Dockerfile. $ mkdir myimage
-
+1.  Create a directory to hold our Dockerfile. 
+```
+$ mkdir myimage
+```
 2.  Create a Dockerfile inside this directory.
 ```
  $ cd myimage
-
  $ vim Dockerfile
 ```
 Of course, you can use any other editor of your choice, if you are using a Windows device.
@@ -934,15 +935,17 @@ RUN apt-get install figlet
 
 -   In many cases, we will add the -y flag to apt-get.
 
- Build it!
+#### Step2: Build it!
 
 Save our file, then execute:
 ```
- $ docker build -t figlet .
+ $ docker build -t figlet:v1 .
 ```
 -  `-t` indicates the tag to apply to the image.
 
 -   `.` indicates the location of the *build context*.
+
+-   `:v1` tag version 1.
 
  (We will talk more about the build context later; but to keep things simple: this is the directory where our Dockerfile is located.)
 
@@ -950,7 +953,7 @@ What happens when we build the image?
 
 The output of docker build looks like this:
 ```
- $ docker build -t figlet .
+ $ docker build -t figlet:v1 .
  Sending build context to Docker daemon 2.048 kB Sending build context to Docker daemon
  Step 0 : FROM ubuntu
  ---> e54ca5efa2e9
@@ -966,11 +969,10 @@ The output of docker build looks like this:
 
 -   Let's explain what this output means.
 
- Sending the build context to Docker
-
+```
 Sending build context to Docker daemon 2.048 kB
-
--   The build context is the . directory given to docker build.
+```
+-   The build context is the `.` directory given to `docker build`.
 
 -   It is sent (as an archive) by the Docker client to the Docker daemon.
 
@@ -978,8 +980,9 @@ Sending build context to Docker daemon 2.048 kB
 
 -   Be careful (or patient) if that directory is big and your link is slow.
 
- Executing each step
+**Executing each step**
 
+```
 Step 1 : RUN apt-get update
 
 ---> Running in 840cb3533193 (...output of the RUN command...)
@@ -987,6 +990,7 @@ Step 1 : RUN apt-get update
  ---> 7257c37726a1
 
 Removing intermediate container 840cb3533193
+```
 
 -   A container (840cb3533193) is created from the base image.
 
@@ -998,7 +1002,7 @@ Removing intermediate container 840cb3533193
 
 -   The output of this step will be the base image for the next one.
 
- The caching system
+**The caching system**
 
 If you run the same build again, it will be instantaneous.
 
@@ -1010,15 +1014,15 @@ Why?
 
 -   Docker uses the exact strings defined in your Dockerfile, so:
 
-    -   RUN apt-get install figlet cowsay is different from
+-   `RUN apt-get install figlet cowsay` is different from
 
- RUN apt-get install cowsay figlet
+    * `RUN apt-get install cowsay figlet`
 
--   RUN apt-get update is not re-executed when the mirrors are updated
+    * `RUN apt-get update` is not re-executed when the mirrors are updated
 
-You can force a rebuild with docker build --no-cache ....
+You can force a rebuild with `docker build --no-cache` ....
 
- Running the image
+#### Step 3: Running the image
 
 The resulting image is not different from the one produced manually.
 ```
@@ -1041,96 +1045,58 @@ For each layer, it shows its creation time, size, and creation command.
 
 When an image was built with a Dockerfile, each layer corresponds to a line of the Dockerfile.
 ```
-$ docker history figlet
-
-| IMAGE           | CREATED             |
-|-----------------|---------------------|
-| f9e8f1642759    | About an hour ago   |
-| 7257c37726a1    | About an hour ago   |
-| 07c86167cdc4    | 4                   |
-| <missing> | 4                   |
-| <missing> | 4                   |
-| <missing> | 4                   |
-
-| CREATED BY                       | SIZE    | MB   |     |
-|----------------------------------|---------|------|-----|
-| /bin/sh -c apt-get install fi    | 1.627   |      |     |
-| /bin/sh -c apt-get update        | 21.58   | MB   |     |
-| /bin/sh -c \#(nop) CMD \["/bin   | 0 B     | kB   |     |
-| /bin/sh -c sed -i 's/^\#\\s\*\\( | 1.895   |      |     |
-| /bin/sh -c echo '\#!/bin/sh'     | 194.5   | kB   |     |
-| /bin/sh -c \#(nop) ADD file:b    | 187.8   | MB   |     |
+$ docker history figlet:v1
 
 ```
-Introducing JSON syntax
+#### Step 4: Introducing JSON syntax
 
 Most Dockerfile arguments can be passed in two forms:
 
 -   plain string:
 
- RUN apt-get install figlet
+    `RUN apt-get install figlet`
 
 -   JSON list:
 
- RUN \["apt-get", "install", "figlet"\]
+    `RUN \["apt-get", "install", "figlet"\]`
 
 Let's change our Dockerfile as follows!
 
+```
  FROM ubuntu
 
  RUN apt-get update
 
- RUN \["apt-get", "install", "figlet"\]
+ RUN ["apt-get", "install", "figlet"]
+```
 
 Then build the new Dockerfile.
+```
+ $ docker build -t figlet:v2 .
+```
 
- $ docker build -t figlet .
-
-JSON syntax vs string syntax
+**JSON syntax vs string syntax**
 
 Compare the new history:
+```
+$ docker history figlet:v2
+IMAGE               CREATED             CREATED BY                                      SIZE                COMMENT
+b7fa8e20196b        2 days ago          /bin/sh -c apt-get install figlet               1.02 MB
+f4e91ba1a062        2 days ago          /bin/sh -c apt-get update                       40.2 MB
+104bec311bcd        3 months ago        /bin/sh -c #(nop)  CMD ["/bin/bash"]            0 B
+<missing>           3 months ago        /bin/sh -c mkdir -p /run/systemd && echo '...   7 B
+<missing>           3 months ago        /bin/sh -c sed -i 's/^#\s*\(deb.*universe\...   1.9 kB
+<missing>           3 months ago        /bin/sh -c rm -rf /var/lib/apt/lists/*          0 B
+<missing>           3 months ago        /bin/sh -c set -xe   && echo '#!/bin/sh' >...   745 B
+<missing>           3 months ago        /bin/sh -c #(nop) ADD file:7529d28035b43a2...   129 MB
 
-$ docker history figlet
-
-| IMAGE           | CREATED             |
-|-----------------|---------------------|
-| 27954bb5faaf    | 10 seconds ago      |
-| 7257c37726a1    | About an hour ago   |
-| 07c86167cdc4    | 4                   |
-| <missing> | 4                   |
-| <missing> | 4                   |
-| <missing> | 4                   |
-
-| CREATED BY                       | SIZE    | MB   |     |
-|----------------------------------|---------|------|-----|
-| apt-get install figlet           | 1.627   |      |     |
-| /bin/sh -c apt-get update        | 21.58   | MB   |     |
-| /bin/sh -c \#(nop) CMD \["/bin   | 0 B     | kB   |     |
-| /bin/sh -c sed -i 's/^\#\\s\*\\( | 1.895   |      |     |
-| /bin/sh -c echo '\#!/bin/sh'     | 194.5   | kB   |     |
-| /bin/sh -c \#(nop) ADD file:b    | 187.8   | MB   |     |
-
+```
 -   JSON syntax specifies an *exact* command to execute.
 
--   String syntax specifies a command to be wrapped within /bin/sh -c "...".
+-   String syntax specifies a command to be wrapped within `/bin/sh -c "..."`.
 
+#### Lab 7: PUSH an Image to a Local Registry
 
-
-
-
-
-#### Lab 7: PUSH PULL Image to a Local Registry
-////
-Uploading our images to the Docker Hub We have built our first images.
-
-If we were so inclined, we could share those images through the Docker Hub.
-We won't do it since we don't want to force everyone to create a Docker Hub account (although it's free, yay!) but the steps would be:
-• have an account on the Docker Hub
-• tag our image accordingly (i.e. username/imagename)
-• docker push username/imagename
-Anybody can now docker run username/imagename from any Docker host. Images can be set to be private as well.
-
-////
 For this step, we'll need to launch a local registry in a container:
 ```
 docker run -d -p 5000:5000 --name registry registry:2
@@ -1161,5 +1127,114 @@ Nowe PULL the Image from the Local Repository.
 ```
 
 Lets see
+
+
+### Operations with images
+
+You are already familiar with one command, `docker images`. You can also remove images, tag and untag them.
+
+#### Step 1: Build a new version
+First let build the new figlet v3 from Dockerfile.
+```
+ $ docker build -t figlet:v3 .
+```
+
+#### Step 2: Removing images and containers
+
+Let's start with removing the image figlet verion 1 (figlet:v1) that takes too much disk space:
+
+```
+$ docker rmi figlet:v1
+Error response from daemon: conflict: unable to remove repository reference "figlet:v1" (must force) - container 3b8931ffdacd is using its referenced image bbc0e5eb5777
+
+```
+
+Docker complains that there are containers using this image. How is this possible? We thought that all our containers are gone.
+Actually, Docker keeps track of all containers, even those that have stopped:
+
+```bash
+$ docker ps -a
+CONTAINER ID        IMAGE                        COMMAND                   CREATED             STATUS                           PORTS                    NAMES
+292d1e8d5103        myubuntu                     "curl https://google."    5 minutes ago       Exited (0) 5 minutes ago                                  cranky_lalande
+f79c361a24f9        440a0da6d69e                 "/bin/sh -c curl"         5 minutes ago       Exited (2) 5 minutes ago                                  nauseous_sinoussi
+01825fd28a50        440a0da6d69e                 "/bin/sh -c curl --he"    6 minutes ago       Exited (2) 5 minutes ago                                  high_davinci
+95ffb2131c89        440a0da6d69e                 "/bin/sh -c curl http"    6 minutes ago       Exited (2) 6 minutes ago                                  lonely_sinoussi
+```
+
+We can now delete the container:
+
+```bash
+$ docker rm 292d1e8d5103
+292d1e8d5103
+```
+
+and the image:
+
+```bash
+$ docker rmi myubuntu
+Untagged: myubuntu:latest
+Deleted: sha256:50928f386c704610fb16d3ca971904f3150f3702db962a4770958b8bedd9759b
+```
+
+**Tagging images**
+
+`docker tag` helps us to tag images.
+
+We have quite a lot of versions of `figlet` built, but latest still points to the old `v1`.
+
+```
+$ docker images | grep figlet
+figlet                                             v2                  bbc0e5eb5777        2 days ago          170 MB
+figlet                                             v3                  bbc0e5eb5777        2 days ago          170 MB
+figlet                                             latest              b7fa8e20196b        2 days ago          170 MB
+figlet                                             v1                  b7fa8e20196b        2 days ago          170 MB
+```
+
+Let's change that by re-tagging `latest` to `v7`:
+
+```bash
+$ docker tag hello:v7 hello:latest
+$ docker images | grep hello
+hello                                         latest              d0ec3cfed6f7        38 minutes ago      1.11 MB
+hello                                         v7                  d0ec3cfed6f7        38 minutes ago      1.11 MB
+hello                                         v6                  db7c6f36cba1        47 minutes ago      1.11 MB
+hello                                         v5                  1fbecb029c8e        About an hour ago   1.11 MB
+hello                                         v4                  ddb5bc88ebf9        About an hour ago   1.11 MB
+hello                                         v3                  eb07be15b16a        About an hour ago   1.11 MB
+hello                                         v2                  195aa31a5e4d        3 hours ago         1.11 MB
+```
+
+Both `v7` and `latest` point to the same image ID `d0ec3cfed6f7`.
+
+
+**Publishing images**
+
+Images are distributed with a special service - `docker registry`.
+Let us spin up a local registry:
+
+```bash
+$ docker run -p 5000:5000 --name registry -d registry:2
+```
+
+`docker push` is used to publish images to registries.
+
+To instruct where we want to publish, we need to append registry address to repository name:
+
+```
+$ docker tag hello:v7 127.0.0.1:5000/hello:v7
+$ docker push 127.0.0.1:5000/hello:v7
+```
+
+`docker push` pushed the image to our "remote" registry.
+
+We can now download the image using the `docker pull` command:
+
+```bash
+$ docker pull 127.0.0.1:5000/hello:v7
+v7: Pulling from hello
+Digest: sha256:c472a7ec8ab2b0db8d0839043b24dbda75ca6fa8816cfb6a58e7aaf3714a1423
+Status: Image is up to date for 127.0.0.1:5000/hello:v7
+```
+
 
 ## End of the Docker labs :-)
