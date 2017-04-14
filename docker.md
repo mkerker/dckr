@@ -417,7 +417,7 @@ You can attach to a container:
 
 -   There *can* be multiple clients attached to the same container.
 
--   If you don't specify --detach-keys when attaching, it defaults back to ^P^Q.
+-   If you don't specify `--detach-keys` when attaching, it defaults back to ^P^Q.
 
 Try it on our previous container:
 ```
@@ -427,7 +427,7 @@ Check that ^X x doesn't work, but ^P ^Q does.
 
  Detaching from non-interactive containers
 
--   **Warning:** if the container was started without -it...
+-   **Warning:** if the container was started without `-it`...
 
     -   You won't be able to detach with ^P^Q.
 
@@ -500,11 +500,10 @@ In this lab, we will explain:
 
 -   Image tags and when to use them.
 
- What is an image?
+##### What is an image?
 
 -   An image is a collection of files + some meta data.
-
- (Technically: those files form the root filesystem of a container.)
+    (Technically: those files form the root filesystem of a container.)
 
 -   Images are made of *layers*, conceptually stacked on top of each other.
 
@@ -526,7 +525,7 @@ In this lab, we will explain:
 
     -   Configuration
 
- Differences between containers and images
+##### Differences between containers and images
 
 -   An image is a read-only filesystem.
 
@@ -534,14 +533,13 @@ In this lab, we will explain:
 
 -   To optimize container boot time, *copy-on-write* is used instead of regular copy.
 
--   docker run starts a container from a given image.
+-   `docker run` starts a container from a given image.
 
 Let's give a couple of metaphors to illustrate those concepts.
 
- Image as stencils
+**Image as stencils**
 
 Images are like templates or stencils that you can create containers from.
-
 
 Object-oriented programming
 
@@ -551,8 +549,7 @@ Object-oriented programming
 
 -   Containers are conceptually similar to *instances*.
 
- Wait a minute...
-
+**Wait a minute...**
 If an image is read-only, how do we change it?
 
 -   We don't.
@@ -565,7 +562,7 @@ If an image is read-only, how do we change it?
 
 -   A new image is created by stacking the new layer on top of the old image.
 
- A chicken-and-egg problem
+**A chicken-and-egg problem**
 
 -   The only way to create an image is by "freezing" a container.
 
@@ -573,7 +570,7 @@ If an image is read-only, how do we change it?
 
 -   Help!
 
-Creating the first images
+**Creating the first images**
 
 There is a special empty image called scratch.
 
@@ -587,15 +584,15 @@ The docker import command loads a tarball into Docker.
 
 Note: you will probably never have to do this yourself.
 
- Creating other images
+**Creating other images**
 
-docker commit
+`docker commit`
 
 -   Saves all the changes made to a container into a new layer.
 
 -   Creates a new image (effectively a copy of the container).
 
-docker build
+`docker build`
 
 -   Performs a repeatable build sequence.
 
@@ -603,7 +600,7 @@ docker build
 
 We will explain both methods in a moment.
 
- Images namespaces
+**Images namespaces**
 
 There are three namespaces:
 
@@ -619,7 +616,7 @@ There are three namespaces:
 
 Let's explain each of them.
 
- Root namespace
+**Root namespace**
 
 The root namespace is for official images. They are put there by ., but they are generally authored and maintained by third parties.
 
@@ -633,17 +630,17 @@ Those images include:
 
 The user namespace holds images for Docker Hub users and organizations. For example:
 
- jpetazzo/clock
+`jpetazzo/clock`
 
 The Docker Hub user is:
 
- jpetazzo
+`jpetazzo`
 
 The image name is:
 
- clock
+`clock`
 
- Self-Hosted namespace
+**Self-Hosted namespace**
 
 This namespace holds images which are not hosted on Docker Hub, but on third party registries.
 
@@ -651,14 +648,13 @@ They contain the hostname (or IP address), and optionally the port, of the regis
 
 For example:
 
- localhost:5000/wordpress
+`localhost:5000/wordpress`
 
 -   localhost:5000 is the host and port of the registry
 
 -   wordpress is the name of the image
 
- How do you store and manage images?
-
+How do you store and manage images?
 Images can be stored:
 
 -   On your Docker host.
@@ -669,56 +665,60 @@ You can use the Docker client to download (pull) or upload (push) images.
 
 To be more accurate: you can use the Docker client to tell a Docker server to push and pull images to and from a registry.
 
- Showing current images
+#### Step 1: Showing current images
 
 Let's look at what images are on our host now.
 ```
-| $ docker images | TAG      | IMAGE ID       | CREATED         | SIZE         |          |     |
-|-----------------|----------|----------------|-----------------|--------------|----------|-----|
-| REPOSITORY      |          |                |                 |              | MB       |     |
-| fedora          | latest   | ddd5c9c1d0f2   | 3               | days ago     | 204.7    |     |
-| centos          | latest   | d0e7f81ca65c   | 3               | days ago     | 196.6    | MB  |
-| ubuntu          | latest   | 07c86167cdc4   | 4               | days ago     | 188 MB   | MB  |
-| redis           | latest   | 4f5f397d4b7c   | 5               | days ago     | 177.6    |     |
-| postgres        | latest   | afe2b5e1859b   | 5               | days ago     | 264.5    | MB  |
-| alpine          | latest   | 70c557e50ed6   | 5               | days ago     | 4.798    | MB  |
-| debian          | latest   | f50f9524513f   | 6               | days ago     | 125.1    | MB  |
-| busybox         | latest   | 3240943c9ea3   | 2               | weeks ago    | 1.114    | MB  |
-| training/namer  | latest   | 902673acc741   | 9               | months ago   | 289.3    | MB  |
-| jpetazzo/clock  | latest   | 12068b93616f   | 12 months ago   | 2.433        | MB       |     |
+$ docker images
+REPOSITORY                                         TAG                 IMAGE ID            CREATED             SIZE
+172.30.242.253:5000/ci-cd/nodejs-mongodb-example   latest              1af68153dd95        8 weeks ago         460 MB
+openshift/jenkins-slave-nodejs-centos7             latest              9a6c7d3826da        8 weeks ago         737 MB
+openshift/jenkins-2-centos7                        <none>              6d2108f8afa6        8 weeks ago         723 MB
+centos/nodejs-4-centos7                            <none>              25a5f5423ead        8 weeks ago         445 MB
+centos/mongodb-32-centos7                          <none>              b6a2b36aa18f        8 weeks ago         567 MB
+mkerker/duckhunt                                   latest              5df5972ae7b5        2 months ago        771 MB
+node                                               latest              efe7b69d7b71        2 months ago        660 MB
+httpd                                              latest              6587355a8c4f        2 months ago        176 MB
+busybox                                            latest              7968321274dc        3 months ago        1.11 MB
+ubuntu                                             latest              104bec311bcd        3 months ago        129 MB
+jpetazzo/clock                                     latest              12068b93616f        2 years ago         2.43 MB
 ```
- Searching for images
+#### Step2: Searching for images
 
 We cannot list *all* images on a remote registry, but we can search for a specific keyword:
 ```
-| $ docker search zookeeper | STARS OFFICIAL              | AUTOMATED   |          |
-|---------------------------|-----------------------------|-------------|----------|-----|
-| NAME                      | DESCRIPTION                 |             |          |     |
-| jplock/zookeeper          | Builds a docker image ...   | 103         | \[OK\]   |     |
-| mesoscloud/zookeeper      | ZooKeeper                   | 42          | \[OK\]   |     |
-| springxd/zookeeper        | A Docker image that ca...   | 5           | \[OK\]   |     |
-| elevy/zookeeper           | ZooKeeper configured t...   | 3           | \[OK\]   |     |
+$ docker search zookeeper
+NAME                          DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
+jplock/zookeeper              Builds a docker image for Zookeeper versio...   159                  [OK]
+zookeeper                     Apache ZooKeeper is an open-source server ...   132                  [OK]
+mesoscloud/zookeeper          ZooKeeper                                       70                   [OK]
+digitalwonderland/zookeeper   Latest Zookeeper - clusterable                  12                   [OK]
+springxd/zookeeper            A Docker image that can run a ZooKeeper se...   6                    [OK]
+elevy/zookeeper               ZooKeeper configured to execute an ensembl...   6                    [OK]
+debezium/zookeeper            Zookeeper image required when running the ...   3                    [OK]
 ```
 -   "Stars" indicate the popularity of the image.
 
 -   "Official" images are those in the root namespace.
 
 -   "Automated" images are built automatically by the Docker Hub.
+    (This means that their build recipe is always available.)
 
- (This means that their build recipe is always available.)
-
- Downloading images
+#### Step 3: Downloading images
 
 There are two ways to download images.
 
- • Explicitly, with docker pull.
+-   Explicitly, with `docker pull`.
 
--   Implicitly, when executing docker run and the image is not found locally.
+-   Implicitly, when executing `docker run` and the image is not found locally.
 
- Pulling an image
+Lets pulling an image:
 ```
-$ docker pull debian:jessie Pulling repository debian b164861940b8: Download complete
-b164861940b8: Pulling image (jessie) from debian d1881793a057: Download complete
+$ docker pull debian:jessie
+jessie: Pulling from library/debian
+6d827a3ef358: Pull complete
+Digest: sha256:72f784399fd2719b4cb4e16ef8e369a39dc67f53d978cd3e2e7bf4e502c7b793
+Status: Downloaded newer image for debian:jessie
 ```
 -   As seen previously, images are made up of layers.
 
@@ -726,17 +726,17 @@ b164861940b8: Pulling image (jessie) from debian d1881793a057: Download complete
 
 -   In this example, :jessie indicates which exact version of Debian we would like. It is a *version tag*.
 
- Image and tags
+#### Image and tags
 
 -   Images can have tags.
 
 -   Tags define image versions or variants.
 
- • docker pull ubuntu will refer to ubuntu:latest.
+-   `docker pull ubuntu` will refer to `ubuntu:latest`.
 
--   The :latest tag is generally updated often.
+-   The `:latest` tag is generally updated often.
 
- When to (not) use tags
+**When to (not) use tags**
 
 Don't specify tags:
 
@@ -756,7 +756,9 @@ Do specify tags:
 
 -   To ensure repeatability later.
 
-Section summary
+Later on we have a lab to tag a image. 
+
+#### Section summary
 
 We've learned how to:
 
