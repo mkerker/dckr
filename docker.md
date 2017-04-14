@@ -1100,39 +1100,6 @@ f4e91ba1a062        2 days ago          /bin/sh -c apt-get update               
 
 -   String syntax specifies a command to be wrapped within `/bin/sh -c "..."`.
 
-#### Lab 7: PUSH an Image to a Local Registry
-
-For this step, we'll need to launch a local registry in a container:
-```
-docker run -d -p 5000:5000 --name registry registry:2
-```
-Then tag your image under the registry namespace and push it there:
-```
- $ REGISTRY=localhost:5000
- $ docker tag hello-world $REGISTRY/$(whoami)/hello-world
- $ docker push $REGISTRY/$(whoami)/hello-world
-```
-tag: Tag an image into a repository
-push: Push an image or a repository to a Docker registry server
-
-REMOVE Image
-```
- $ docker images
-```
-
-```
- $ docker rmi <containerId>
-```
-
-Nowe PULL the Image from the Local Repository.
-
-```
- $ docker pull $REGISTRY/$(whoami)/hello-world
- $ docker run -d -P --name=registry-hello $REGISTRY/$(whoami)/hello-world
-```
-
-Lets see
-
 
 ## Lab 7: Operations with images
 
@@ -1231,7 +1198,25 @@ $ docker push 127.0.0.1:5000/figlet:v3
 
 `docker push` pushed the image to our "remote" registry.
 
+remove all containers and images
 
+
+#### Step 4: Stop all dockers containers and images
+
+Enter the following commands to clean up:
+
+docker stop $(ps docker -q -a)
+# Delete every Docker containers
+# Must be run first because images are attached to containers
+docker rm -f $(docker ps -a -q)
+
+# Delete every Docker image
+docker rmi -f $(docker images -q)
+
+See that is clean
+
+docker images
+#### Step 5: PULL the image from registry
 
 We can now download the image using the `docker pull` command:
 
@@ -1242,6 +1227,10 @@ Digest: sha256:c472a7ec8ab2b0db8d0839043b24dbda75ca6fa8816cfb6a58e7aaf3714a1423
 Status: Image is up to date for 127.0.0.1:5000/hello:v7
 ```
 
-rmi v1, v2 etc
+and see that it is pulled
+
+docker images
+
+Repeat step 4 if you want a clean envoirement. 
 
 ## End of the Docker labs :-)
