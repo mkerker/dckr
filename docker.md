@@ -675,17 +675,12 @@ Let's look at what images are on our host now.
 ```
 $ docker images
 REPOSITORY                                         TAG                 IMAGE ID            CREATED             SIZE
-172.30.242.253:5000/ci-cd/nodejs-mongodb-example   latest              1af68153dd95        8 weeks ago         460 MB
-openshift/jenkins-slave-nodejs-centos7             latest              9a6c7d3826da        8 weeks ago         737 MB
-openshift/jenkins-2-centos7                        <none>              6d2108f8afa6        8 weeks ago         723 MB
-centos/nodejs-4-centos7                            <none>              25a5f5423ead        8 weeks ago         445 MB
-centos/mongodb-32-centos7                          <none>              b6a2b36aa18f        8 weeks ago         567 MB
 mkerker/duckhunt                                   latest              5df5972ae7b5        2 months ago        771 MB
 node                                               latest              efe7b69d7b71        2 months ago        660 MB
 httpd                                              latest              6587355a8c4f        2 months ago        176 MB
 busybox                                            latest              7968321274dc        3 months ago        1.11 MB
 ubuntu                                             latest              104bec311bcd        3 months ago        129 MB
-mkerker/clock                                     latest              12068b93616f        2 years ago         2.43 MB
+mkerker/clock                                      latest              12068b93616f        2 years ago         2.43 MB
 ```
 #### Step2: Searching for images
 
@@ -807,7 +802,7 @@ Our base will be the ubuntu image.
 Start an Ubuntu container:
 ```
  $ docker run -it ubuntu
- root@<yourContainerId>:\#/
+ root@<yourContainerId>:\#
 ```
 Run the command apt-get update to refresh the list of packages available to install.
 
@@ -1166,13 +1161,9 @@ Let's change that by re-tagging `latest` to `v7`:
 ```
 $ docker tag hello:v7 hello:latest
 $ docker images | grep hello
-hello                                         latest              d0ec3cfed6f7        38 minutes ago      1.11 MB
-hello                                         v7                  d0ec3cfed6f7        38 minutes ago      1.11 MB
-hello                                         v6                  db7c6f36cba1        47 minutes ago      1.11 MB
-hello                                         v5                  1fbecb029c8e        About an hour ago   1.11 MB
-hello                                         v4                  ddb5bc88ebf9        About an hour ago   1.11 MB
-hello                                         v3                  eb07be15b16a        About an hour ago   1.11 MB
-hello                                         v2                  195aa31a5e4d        3 hours ago         1.11 MB
+
+
+
 ```
 
 Both `v7` and `latest` point to the same image ID `d0ec3cfed6f7`.
@@ -1198,38 +1189,41 @@ $ docker push 127.0.0.1:5000/figlet:v3
 
 `docker push` pushed the image to our "remote" registry.
 
-remove all containers and images
-
-
 #### Step 4: Stop all dockers containers and images
 
 Enter the following commands to clean up:
 
-docker stop $(ps docker -q -a)
+```
+# docker stop $(ps docker -q -a | grep figlet)
 # Delete every Docker containers
 # Must be run first because images are attached to containers
-docker rm -f $(docker ps -a -q)
+$ docker rm -f $(docker ps -a -q | grep figlet)
 
 # Delete every Docker image
-docker rmi -f $(docker images -q)
+$ docker rmi -f $(docker images -q | grep figlet)
+```
+See that the figlet images are removed.
 
-See that is clean
+```
+$ docker images -q | grep figlet
+```
 
-docker images
 #### Step 5: PULL the image from registry
 
 We can now download the image using the `docker pull` command:
 
 ```
-$ docker pull 127.0.0.1:5000/hello:v7
-v7: Pulling from hello
+$ docker pull 127.0.0.1:5000/figlet
+v3: Pulling from figlet
 Digest: sha256:c472a7ec8ab2b0db8d0839043b24dbda75ca6fa8816cfb6a58e7aaf3714a1423
-Status: Image is up to date for 127.0.0.1:5000/hello:v7
+Status: Image is up to date for 127.0.0.1:5000/figlet
 ```
 
-and see that it is pulled
+and see that it is pulled.
 
-docker images
+```
+$ docker images
+```
 
 Repeat step 4 if you want a clean envoirement. 
 
