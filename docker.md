@@ -169,7 +169,7 @@ We will run a small custom container.
 
 This container just displays the time every second.
 ```
- $ docker run jpetazzo/clock 
+ $ docker run mkerker/clock 
  Fri Feb 20 00:28:53 UTC Fri Feb 20 00:28:54 UTC Fri Feb 20 00:28:55 UTC
  ...
 ```
@@ -177,9 +177,9 @@ This container just displays the time every second.
 
 -   To stop it, press ^C.
 
--   Docker has automatically downloaded the image jpetazzo/clock.
+-   Docker has automatically downloaded the image mkerker/clock.
 
--   This image is a user image, created by jpetazzo.
+-   This image is a user image, created by mkerker.
 
 -   We will hear more about user images (and other types of images) later.
 
@@ -188,7 +188,7 @@ This container just displays the time every second.
 
 Containers can be started in the background, with the `-d` flag (daemon mode):
 ```
- $ docker run -d jpetazzo/clock 
+ $ docker run -d mkerker/clock 
  47d677dcfba4277c6cc68fcaa51f932b544cab1a187c853b7d0caf4e8debe5ad
 ```
 -   We don't see the output of the container.
@@ -206,7 +206,7 @@ With `docker ps`, just like the UNIX ps command, lists running processes.
 ```
 $ docker ps
   CONTAINER ID  IMAGE           ...  CREATED        STATUS        ...
-  47d677dcfba4  jpetazzo/clock  ...  2 minutes ago  Up 2 minutes  ...
+  47d677dcfba4  mkerker/clock  ...  2 minutes ago  Up 2 minutes  ...
 ```
 Docker tells us:
 
@@ -223,10 +223,10 @@ Docker tells us:
 
 Let's start two more containers.
 ```
- $ docker run -d jpetazzo/clock 
+ $ docker run -d mkerker/clock 
  57ad9bdfc06bb4407c47220cf59ce21585dce9a1298d7a67488359aeaea8ae2a 
  
- $ docker run -d jpetazzo/clock 
+ $ docker run -d mkerker/clock 
  068cc994ffd0190bbe025ba74e4c0771a5d8f14734af772ddee8dc1aaf20567d
 ```
 Check that `docker ps` correctly reports all 3 containers.
@@ -238,7 +238,7 @@ To see only the last container that was started:
 ```
  $ docker ps -l
  CONTAINER ID  IMAGE           ...  CREATED        STATUS        ...
- 068cc994ffd0  jpetazzo/clock  ...  2 minutes ago  Up 2 minutes  ...
+ 068cc994ffd0  mkerker/clock  ...  2 minutes ago  Up 2 minutes  ...
 ```
 To see only the ID of containers:
 ```
@@ -343,14 +343,14 @@ Those containers will be terminated immediately (without the 10 seconds delay). 
 
  **List stopped containers**
 
-We can also see stopped containers, with the ```-a (--all)``` option.
+We can also see stopped containers, with the `-a (--all)` option.
 ```
 $ docker ps -a
     CONTAINER ID  IMAGE           ...  CREATED      STATUS
-    068cc994ffd0  jpetazzo/clock  ...  21 min. ago  Exited (137) 3 min. ago
-    57ad9bdfc06b  jpetazzo/clock  ...  21 min. ago  Exited (137) 3 min. ago
-    47d677dcfba4  jpetazzo/clock  ...  23 min. ago  Exited (137) 3 min. ago
-    5c1dfd4d81f1  jpetazzo/clock  ...  40 min. ago  Exited (0) 40 min. ago
+    068cc994ffd0  mkerker/clock  ...  21 min. ago  Exited (137) 3 min. ago
+    57ad9bdfc06b  mkerker/clock  ...  21 min. ago  Exited (137) 3 min. ago
+    47d677dcfba4  mkerker/clock  ...  23 min. ago  Exited (137) 3 min. ago
+    5c1dfd4d81f1  mkerker/clock  ...  40 min. ago  Exited (0) 40 min. ago
     b13c164401fb  ubuntu          ...  55 min. ago  Exited (130) 53 min. ago
 ```
 
@@ -401,7 +401,7 @@ What does `-it` stand for?
 
 Start a container with a custom detach command:
 ```
- $ docker run -ti --detach-keys ctrl-x,x jpetazzo/clock
+ $ docker run -ti --detach-keys ctrl-x,x mkerker/clock
 ```
 Detach by hitting ^X x. (This is ctrl-x then x, not ctrl-x twice!)
 
@@ -462,7 +462,7 @@ You can re-attach to it if you want to interact with it:
 ```
  $ docker attach <yourContainerID>
 ```
-Use `docker ps -a` to identify the container ID of a previous jpetazzo/clock container, and try those commands.
+Use `docker ps -a` to identify the container ID of a previous mkerker/clock container, and try those commands.
 
 > Attaching to a REPL
 
@@ -612,7 +612,7 @@ There are three namespaces:
 
  e.g. ubuntu, busybox ...
 
--   User (and organizations) images e.g. jpetazzo/clock
+-   User (and organizations) images e.g. mkerker/clock
 
 -   Self-hosted images
 
@@ -634,11 +634,11 @@ Those images include:
 
 The user namespace holds images for Docker Hub users and organizations. For example:
 
-`jpetazzo/clock`
+`mkerker/clock`
 
 The Docker Hub user is:
 
-`jpetazzo`
+`mkerker`
 
 The image name is:
 
@@ -685,7 +685,7 @@ node                                               latest              efe7b69d7
 httpd                                              latest              6587355a8c4f        2 months ago        176 MB
 busybox                                            latest              7968321274dc        3 months ago        1.11 MB
 ubuntu                                             latest              104bec311bcd        3 months ago        129 MB
-jpetazzo/clock                                     latest              12068b93616f        2 years ago         2.43 MB
+mkerker/clock                                     latest              12068b93616f        2 years ago         2.43 MB
 ```
 #### Step2: Searching for images
 
