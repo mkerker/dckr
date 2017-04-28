@@ -11,8 +11,7 @@ Those commands allow us to set the default command to run in a container.
 
 When people run our container, we want to greet them with a nice hello message, and using a custom font.
 
-For that, we will execute:
-`figlet -f script hello`
+For that, we will execute: `figlet -f script hello`
 
 -   `-f` script tells figlet to use a fancy font.
 
@@ -32,13 +31,13 @@ Our new Dockerfile will look like this:
  CMD figlet -f script hello
 ```
 
--   CMD defines a default command to run when none is given.
+-   `CMD` defines a default command to run when none is given.
 
 -   It can appear at any point in the file.
 
--   Each CMD will replace and override the previous one.
+-   Each `CMD` will replace and override the previous one.
 
--   As a result, while you can have multiple CMD lines, it is useless.
+-   As a result, while you can have multiple `CMD` lines, it is useless.
 
 #### Step 2: Build and test our image
 
@@ -46,7 +45,9 @@ Let's build it:
 
 ```
  $ docker build -t figlet .
+ 
  ...
+ 
  Successfully built 042dff3b4a8d
 ```
 
@@ -63,7 +64,7 @@ If we want to get a shell into our container (instead of running figlet), we jus
 ```
 -   We specified bash.
 
--   It replaced the value of CMD.
+-   It replaced the value of `CMD`.
 
 #### Step 3: Using ENTRYPOINT
 
@@ -103,7 +104,7 @@ Why did we use JSON syntax for our `ENTRYPOINT`?
 
 -   To avoid this wrapping, you must use JSON syntax.
 
-What if we used ENTRYPOINT with string syntax?
+What if we used `ENTRYPOINT` with string syntax?
 
 ```
  $ docker run figlet salut
@@ -180,8 +181,6 @@ $ docker run figlet
  $ docker run figlet hola mundo
 ```
 
-> Overriding ENTRYPOINT
-
 What if we want to run a shell in our container?
 
 We cannot just do docker run figlet bash because that would just tell figlet to display the word "bash."
@@ -198,10 +197,11 @@ We use the --entrypoint parameter:
 
 So far, we have installed things in our container images by downloading packages. We can also copy files from the *build context* to the container that we are building.
 
-Remember: the *build context* is the directory containing the Dockerfile. In this chapter, we will learn a new Dockerfile keyword: COPY.
+Remember: the *build context* is the directory containing the Dockerfile. In this chapter, we will learn a new Dockerfile keyword: 
 
+`COPY`
 
- Build some C code
+#### Step 1: Build some C code
 
 We want to build a container that compiles a basic "Hello world" program in C. Here is the program, hello.c:
 
@@ -213,13 +213,11 @@ We want to build a container that compiles a basic "Hello world" program in C. H
 
 Let's create a new directory, and put this file in there.
 
-Then we will write the Dockerfile.
-
- The Dockerfile
+#### Step 2: Write the Dockerfile.
 
 On Debian and Ubuntu, the package build-essential will get us a compiler.
 
-When installing it, don't forget to specify the -y flag, otherwise the build will fail (since the build cannot be interactive).
+When installing it, don't forget to specify the `-y` flag, otherwise the build will fail (since the build cannot be interactive).
 
 Then we will use `COPY` to place the source file into the container.
 ```
@@ -236,19 +234,19 @@ Then we will use `COPY` to place the source file into the container.
  CMD /hello
 ```
 
-Create this Dockerfile.
+#### Step 3: Create this Dockerfile.
 
  Testing our C program
 
 -   Create hello.c and Dockerfile in the same direcotry.
 
-| •   | Run docker   | build -t hello . in this directory.        |
-|-----|--------------|--------------------------------------------|
-| •   | Run docker   | run hello, you should see Hello, world!.   |
+-   Run `docker build -t hello .` in this directory.        
+
+-   Run `docker run hello `, you should see Hello, world!.
 
 Success!
 
- `COPY` and the build cache
+#### Step 4: `COPY` and the build cache
 
 -   Run the build again.
 
@@ -258,7 +256,7 @@ Success!
 
 -   Those steps will not be executed again if the files haven't been changed.
 
- Details
+ **Details:**
 
 -   You can `COPY` whole directories recursively.
 
@@ -266,7 +264,7 @@ Success!
 
 -   If we really wanted to compile C code in a compiler, we would:
 
-    -   Place it in a different directory, with the WORKDIR instruction.
+    -   Place it in a different directory, with the `WORKDIR` instruction.
 
     -   Even better, use the gcc official image.
 
