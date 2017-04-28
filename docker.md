@@ -8,7 +8,7 @@
 * [Lab 6: Building Docker Images](#lab-6-building-images-with-a-dockerfile)
 * [Lab 7: CMD and ENTRYPOINT](#lab-7-cmd-and-entrypoint)
 * [Lab 8: Copying files during the build](#lab-8-copying-files-during-the-build)
-* [Lab 9: Operations with images](https://github.com/mkerker/docker-workshopv2/blob/master/docker.md)
+* [Lab 9: Operations with images](#lab-9-operations-with-images)
 
 ## Lab 1: Our First Containers
 
