@@ -278,7 +278,7 @@ We have seen simple Dockerfiles to illustrate how Docker build container images.
 
 -   Tips and tricks to write better Dockerfiles.
 
- Dockerfile usage summary
+** Dockerfile usage summary
 
 -   Dockerfile instructions are executed in order.
 
@@ -290,27 +290,21 @@ We have seen simple Dockerfiles to illustrate how Docker build container images.
 
 -   Lines starting with \# are treated as comments.
 
--   You can only have one CMD and one ENTRYPOINT instruction in a Dockerfile.
+-   You can only have one `CMD` and one `ENTRYPOINT` instruction in a Dockerfile.
 
- The FROM instruction
+** The FROM instruction
 
 -   Specifies the source image to build this image.
 
 -   Must be the first instruction in the Dockerfile, except for comments.
 
-The FROM instruction
 
-Can specify a base image:
 
- `FROM ubuntu`
+Can specify a base image: `FROM ubuntu`
 
-An image tagged with a specific version:
+An image tagged with a specific version: `FROM ubuntu:12.04`
 
- `FROM ubuntu:12.04`
-
-A user image:
-
- `FROM training/sinatra`
+A user image: `FROM training/sinatra`
 
 Or self-hosted image:
 
@@ -340,6 +334,7 @@ Or self-hosted image:
 
 -   Integrate CI and unit tests in the build system
 
+```
  FROM <baseimage>
 
  RUN <install dependencies>
@@ -363,6 +358,8 @@ Or self-hosted image:
  RUN <build code>
 
  CMD, EXPOSE ...
+ 
+```
 
 -   The build fails as soon as an instructions fails
 
