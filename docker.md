@@ -6,7 +6,9 @@
 * Lab 4: Understanding Docker Images
 * Lab 5: Building Images Interactively
 * Lab 6: Building Docker Images
-* Lab 7: Operations with images
+* Lab 7:
+* Lab 8:
+* Lab 9: Operations with images
 
 ## Lab 1: Our First Containers
 
@@ -1094,9 +1096,279 @@ f4e91ba1a062        2 days ago          /bin/sh -c apt-get update               
 -   JSON syntax specifies an *exact* command to execute.
 
 -   String syntax specifies a command to be wrapped within `/bin/sh -c "..."`.
+## Lab 7: CMD and ENTRYPOINT
+
+#### Objectives
+
+In this lab, we will learn about two important Dockerfile commands: `CMD` and `ENTRYPOINT`.
+
+Those commands allow us to set the default command to run in a container.
 
 
-## Lab 7: Operations with images
+#### Step 1: Defining a default command
+
+When people run our container, we want to greet them with a nice hello message, and using a custom font.
+
+For that, we will execute: `figlet -f script hello`
+
+-   `-f` script tells figlet to use a fancy font.
+
+-   hello is the message that we want it to display.
+
+ Adding CMD to our Dockerfile
+
+Our new Dockerfile will look like this:
+
+```
+ FROM ubuntu
+
+ RUN apt-get update
+
+ RUN \["apt-get", "install", "figlet"\]
+
+ CMD figlet -f script hello
+```
+
+-   `CMD` defines a default command to run when none is given.
+
+-   It can appear at any point in the file.
+
+-   Each `CMD` will replace and override the previous one.
+
+-   As a result, while you can have multiple `CMD` lines, it is useless.
+
+#### Step 2: Build and test our image
+
+Let's build it:
+
+```
+ $ docker build -t figlet .
+ 
+ ...
+ 
+ Successfully built 042dff3b4a8d
+```
+
+And run it: 
+
+```
+$ docker run figlet 
+```
+
+If we want to get a shell into our container (instead of running figlet), we just have to specify a different program to run:
+```
+ $ docker run -it figlet bash 
+ root@7ac86a641116:/
+```
+-   We specified bash.
+
+-   It replaced the value of `CMD`.
+
+#### Step 3: Using ENTRYPOINT
+
+We want to be able to specify a different message on the command line, while retaining figlet and some default parameters.
+
+In other words, we would like to be able to do this:
+```
+ $ docker run figlet salut
+```
+
+We will use the `ENTRYPOINT` verb in Dockerfile.
+
+Adding` ENTRYPOINT` to our Dockerfile
+
+Our new Dockerfile will look like this:
+```
+ FROM ubuntu
+
+ RUN apt-get update
+
+ RUN \["apt-get", "install", "figlet"\]
+
+ ENTRYPOINT \["figlet", "-f", "script"\]
+```
+-   `ENTRYPOINT` defines a base command (and its parameters) for the container.
+
+-   The command line arguments are appended to those parameters.
+
+-   Like `CMD`, `ENTRYPOINT` can appear anywhere, and replaces the previous value.
+
+Why did we use JSON syntax for our `ENTRYPOINT`?
+
+
+ Implications of JSON vs string syntax
+
+-   When `CMD` or `ENTRYPOINT` use string syntax, they get wrapped in sh -c.
+
+-   To avoid this wrapping, you must use JSON syntax.
+
+What if we used `ENTRYPOINT` with string syntax?
+
+```
+ $ docker run figlet salut
+```
+
+This would run the following command in the figlet image:
+```
+ sh -c "figlet -f script" salut
+```
+Build and test our image
+
+Let's build it:
+```
+ $ docker build -t figlet .
+
+ ...
+
+ Successfully built 36f588918d73
+```
+And run it:
+```
+ $ docker run figlet salut
+```
+
+Great success!
+
+#### Step 4: Using CMD and ENTRYPOINT together
+
+What if we want to define a default message for our container? Then we will use `ENTRYPOINT` and `CMD` together.
+
+-   `ENTRYPOINT` will define the base command for our container.
+
+-   `CMD` will define the default parameter(s) for this command.
+
+-   They *both* have to use JSON syntax.
+
+Our new Dockerfile will look like this:
+
+```
+ FROM ubuntu
+
+ RUN apt-get update
+
+ RUN \["apt-get", "install", "figlet"\]
+
+ ENTRYPOINT \["figlet", "-f", "script"\]
+
+ CMD \["hello world"\]
+```
+
+-   `ENTRYPOINT` defines a base command (and its parameters) for the container.
+
+-   If we don't specify extra command-line arguments when starting the container, the value of `CMD` is appended.
+
+-   Otherwise, our extra command-line arguments are used instead of `CMD`.
+
+#### Step 5: Build and test our image
+
+Let's build it:
+```
+ $ docker build -t figlet .
+
+ ...
+
+ Successfully built 6e0b6a048a07
+```
+And run it:
+
+```
+$ docker run figlet
+```
+
+```
+ $ docker run figlet hola mundo
+```
+
+What if we want to run a shell in our container?
+
+We cannot just do docker run figlet bash because that would just tell figlet to display the word "bash."
+
+We use the --entrypoint parameter:
+```
+ $ docker run -it --entrypoint bash figlet 
+ root@6027e44e2955
+```
+
+## Lab 8: Copying files during the build
+
+#### Objectives
+
+So far, we have installed things in our container images by downloading packages. We can also copy files from the *build context* to the container that we are building.
+
+Remember: the *build context* is the directory containing the Dockerfile. In this chapter, we will learn a new Dockerfile keyword: 
+
+`COPY`
+
+#### Step 1: Build some C code
+
+We want to build a container that compiles a basic "Hello world" program in C. Here is the program, hello.c:
+
+```
+ int main () 
+ { puts("Hello, world!"); return 0;
+ }
+```
+
+Let's create a new directory, and put this file in there.
+
+#### Step 2: Write the Dockerfile.
+
+On Debian and Ubuntu, the package build-essential will get us a compiler.
+
+When installing it, don't forget to specify the `-y` flag, otherwise the build will fail (since the build cannot be interactive).
+
+Then we will use `COPY` to place the source file into the container.
+```
+ FROM ubuntu
+
+ RUN apt-get update
+
+ RUN apt-get install -y build-essential
+
+ COPY hello.c /
+
+ RUN make hello
+
+ CMD /hello
+```
+
+#### Step 3: Create this Dockerfile.
+
+ Testing our C program
+
+-   Create hello.c and Dockerfile in the same direcotry.
+
+-   Run `docker build -t hello .` in this directory.        
+
+-   Run `docker run hello `, you should see Hello, world!.
+
+Success!
+
+#### Step 4: `COPY` and the build cache
+
+-   Run the build again.
+
+-   Now, modify hello.c and run the build again.
+
+-   Docker can cache steps involving COPY.
+
+-   Those steps will not be executed again if the files haven't been changed.
+
+ **Details:**
+
+-   You can `COPY` whole directories recursively.
+
+-   Older Dockerfiles also have the `ADD` instruction. It is similar but can automatically extract archives.
+
+-   If we really wanted to compile C code in a compiler, we would:
+
+    -   Place it in a different directory, with the `WORKDIR` instruction.
+
+    -   Even better, use the gcc official image.
+
+## Lab 9: Operations with images
+
+# Check Demoan settings !!!! >> Lab 0
 
 You are already familiar with one command, `docker images`. You can also remove images, tag and untag them.
 
