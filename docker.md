@@ -1,7 +1,7 @@
 # Docker
 
 * Lab 1: Our First Containers
-* Lab 2: Background Containers
+* [Lab 2: Background Containers](#lab-2-background-containers)
 * Lab 3: Restarting and Attaching to Containers
 * Lab 4: Understanding Docker Images
 * Lab 5: Building Images Interactively
