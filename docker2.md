@@ -2,21 +2,20 @@
 
 #### Objectives
 
-In this lab, we will learn about two important Dockerfile commands:
-
-CMD and ENTRYPOINT.
+In this lab, we will learn about two important Dockerfile commands: `CMD` and `ENTRYPOINT`.
 
 Those commands allow us to set the default command to run in a container.
 
- Defining a default command
+
+#### Step 1: Defining a default command
 
 When people run our container, we want to greet them with a nice hello message, and using a custom font.
 
 For that, we will execute:
-
+```
  figlet -f script hello
-
--   -f script tells figlet to use a fancy font.
+```
+-   `-f` script tells figlet to use a fancy font.
 
 -   hello is the message that we want it to display.
 
@@ -24,6 +23,7 @@ For that, we will execute:
 
 Our new Dockerfile will look like this:
 
+```
  FROM ubuntu
 
  RUN apt-get update
@@ -31,6 +31,7 @@ Our new Dockerfile will look like this:
  RUN \["apt-get", "install", "figlet"\]
 
  CMD figlet -f script hello
+```
 
 -   CMD defines a default command to run when none is given.
 
@@ -43,27 +44,27 @@ Our new Dockerfile will look like this:
 Build and test our image
 
 Let's build it:
-
+```
  $ docker build -t figlet .
-
  ...
+  Successfully built 042dff3b4a8d
+```
 
-| Successfully   | built 042dff3b4a8d            |      |
-|----------------|-------------------------------|------|--------|------|
-| And run it:    |                               |      |        |      |
-| $ docker run   | figlet                        |      |        |
-| \_             |                               | \_   | \_     |      |
-| | |            | \_                            | |    | | | |  | \_\_ |
-| | |            |                               | |    | | | |  |      |
-| |/ \\          | |/                            | |/   | |/ /   | \\\_ |
-| |              | |\_/|\_\_/|\_\_/|\_\_/\\\_\_/ |      |
+And run it: 
+
+```
+$ docker run figlet 
+```
+
+
 
  Overriding CMD
 
 If we want to get a shell into our container (instead of running figlet), we just have to specify a different program to run:
-
- $ docker run -it figlet bash root@7ac86a641116:/\#
-
+```
+ $ docker run -it figlet bash 
+ root@7ac86a641116:/
+```
 -   We specified bash.
 
 -   It replaced the value of CMD.
@@ -73,16 +74,9 @@ If we want to get a shell into our container (instead of running figlet), we jus
 We want to be able to specify a different message on the command line, while retaining figlet and some default parameters.
 
 In other words, we would like to be able to do this:
-
+```
  $ docker run figlet salut
-
-|         |       | |    | \_  | |   |       |     |
-|---------|-------|------|-----|-----|-------|-----|
-| ,       | \_\_, |      |     |     | \_|\_ |     |
-|         |       | |    |     | |   |       |     |
-| / \\\_/ | |     | |/   | |   | | | |       |
-
- \\/ \\\_/|\_/|\_\_/ \\\_/|\_/|\_/
+```
 
 We will use the ENTRYPOINT verb in Dockerfile.
 
@@ -158,7 +152,7 @@ What if we want to define a default message for our container? Then we will use 
  CMD and ENTRYPOINT together
 
 Our new Dockerfile will look like this:
-
+```
  FROM ubuntu
 
  RUN apt-get update
@@ -168,6 +162,7 @@ Our new Dockerfile will look like this:
  ENTRYPOINT \["figlet", "-f", "script"\]
 
  CMD \["hello world"\]
+```
 
 -   ENTRYPOINT defines a base command (and its parameters) for the container.
 
@@ -178,13 +173,13 @@ Our new Dockerfile will look like this:
 Build and test our image
 
 Let's build it:
-
+```
  $ docker build -t figlet .
 
  ...
 
  Successfully built 6e0b6a048a07
-
+```
 And run it:
 
 | $ docker run | figlet  | \_                         |                    |     |     |
@@ -210,8 +205,10 @@ What if we want to run a shell in our container?
 We cannot just do docker run figlet bash because that would just tell figlet to display the word "bash."
 
 We use the --entrypoint parameter:
-
- $ docker run -it --entrypoint bash figlet root@6027e44e2955
+```
+ $ docker run -it --entrypoint bash figlet 
+ root@6027e44e2955
+```
 
 ## Lab 8: Copying files during the build
 
@@ -226,9 +223,11 @@ Remember: the *build context* is the directory containing the Dockerfile. In thi
 
 We want to build a container that compiles a basic "Hello world" program in C. Here is the program, hello.c:
 
+```
  int main () { puts("Hello, world!"); return 0;
 
  }
+```
 
 Let's create a new directory, and put this file in there.
 
@@ -241,7 +240,7 @@ On Debian and Ubuntu, the package build-essential will get us a compiler.
 When installing it, don't forget to specify the -y flag, otherwise the build will fail (since the build cannot be interactive).
 
 Then we will use COPY to place the source file into the container.
-
+```
  FROM ubuntu
 
  RUN apt-get update
@@ -253,6 +252,7 @@ Then we will use COPY to place the source file into the container.
  RUN make hello
 
  CMD /hello
+```
 
 Create this Dockerfile.
 
@@ -288,7 +288,7 @@ Success!
 
     -   Even better, use the gcc official image.
 
-## Lab 8: Advanced Dockerfiles
+## Lab 9: Advanced Dockerfiles
 
 #### Objectives
 
@@ -673,6 +673,7 @@ This is useful for building images which will be used as a base to build other i
 
 The dependencies are reinstalled every time, because the build system does not know if requirements.txt has been updated.
 
+```
  FROM python
 
  MAINTAINER Docker Education Team <education@docker.com>
@@ -686,11 +687,11 @@ The dependencies are reinstalled every time, because the build system does not k
  EXPOSE 5000
 
  CMD \["python", "app.py"\]
-
+```
  Fixed Dockerfile
 
 Adding the dependencies as a separate step means that Docker can cache more efficiently and only install them when requirements.txt changes.
-
+```
  FROM python
 
  MAINTAINER Docker Education Team <education@docker.com>
@@ -706,3 +707,4 @@ Adding the dependencies as a separate step means that Docker can cache more effi
  EXPOSE 5000
 
  CMD \["python", "app.py"\]
+```
