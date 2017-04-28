@@ -12,9 +12,8 @@ Those commands allow us to set the default command to run in a container.
 When people run our container, we want to greet them with a nice hello message, and using a custom font.
 
 For that, we will execute:
-```
- figlet -f script hello
-```
+`figlet -f script hello`
+
 -   `-f` script tells figlet to use a fancy font.
 
 -   hello is the message that we want it to display.
@@ -41,13 +40,14 @@ Our new Dockerfile will look like this:
 
 -   As a result, while you can have multiple CMD lines, it is useless.
 
-Build and test our image
+#### Step 2: Build and test our image
 
 Let's build it:
+
 ```
  $ docker build -t figlet .
  ...
-  Successfully built 042dff3b4a8d
+ Successfully built 042dff3b4a8d
 ```
 
 And run it: 
@@ -55,10 +55,6 @@ And run it:
 ```
 $ docker run figlet 
 ```
-
-
-
- Overriding CMD
 
 If we want to get a shell into our container (instead of running figlet), we just have to specify a different program to run:
 ```
@@ -69,7 +65,7 @@ If we want to get a shell into our container (instead of running figlet), we jus
 
 -   It replaced the value of CMD.
 
- Using ENTRYPOINT
+#### Step 3: Using ENTRYPOINT
 
 We want to be able to specify a different message on the command line, while retaining figlet and some default parameters.
 
@@ -83,7 +79,7 @@ We will use the ENTRYPOINT verb in Dockerfile.
  Adding ENTRYPOINT to our Dockerfile
 
 Our new Dockerfile will look like this:
-
+```
  FROM ubuntu
 
  RUN apt-get update
@@ -91,7 +87,7 @@ Our new Dockerfile will look like this:
  RUN \["apt-get", "install", "figlet"\]
 
  ENTRYPOINT \["figlet", "-f", "script"\]
-
+```
 -   ENTRYPOINT defines a base command (and its parameters) for the container.
 
 -   The command line arguments are appended to those parameters.
@@ -109,33 +105,28 @@ Why did we use JSON syntax for our ENTRYPOINT?
 
 What if we used ENTRYPOINT with string syntax?
 
+```
  $ docker run figlet salut
+```
 
 This would run the following command in the figlet image:
-
+```
  sh -c "figlet -f script" salut
-
+```
 Build and test our image
 
 Let's build it:
-
+```
  $ docker build -t figlet .
 
  ...
 
  Successfully built 36f588918d73
-
+```
 And run it:
-
+```
  $ docker run figlet salut
-
-|         |       | |    | \_  | |   |       |     |
-|---------|-------|------|-----|-----|-------|-----|
-| ,       | \_\_, |      |     |     | \_|\_ |     |
-|         |       | |    |     | |   |       |     |
-| / \\\_/ | |     | |/   | |   | | | |       |
-
- \\/ \\\_/|\_/|\_\_/ \\\_/|\_/|\_/
+```
 
 Great success!
 
@@ -182,21 +173,13 @@ Let's build it:
 ```
 And run it:
 
-| $ docker run | figlet  | \_                         |                    |     |     |
-|--------------|---------|----------------------------|--------------------|-----|-----|-----|-----|-----|
-| \_           |         | \_                         | \_                 |     |     |     | |   |     |
-| | |          | \_      | |                          | | | |              | | | |     |     |
-| | |          |         | | | | | \_\_               | \_\_ ,\_ | | \_\_| |     |
-| |/ \\ |/     | |/ |/   | / \\\_ | | |\_/ \\\_/ | |/ | / |                |     |
+```
+$ docker run figlet
+```
 
-| |                              | |\_/|\_\_/|\_\_/|\_\_/\\\_\_/ | \\/ \\/ \\\_\_/                           | |\_/|\_\_/\\\_/|\_/ |
-|--------------------------------|-------------------------------|-------------------------------------------|---------------------|
-| $ docker run figlet hola mundo |                               |                                           |                     |
-| \_                             | \_                            |                                           |                     |
-| | |                            | | |                           | \_ \_ \_                                  | \_ \_               |
-| | |                            | \_\_ | | \_\_,                |                                           |                     |
-| |/ \\ / \\\_|/ / |             | / |/ |/ | |                   | | / |/ | / | / \\\_                       |                     |
-| |                              | |\_/\\\_\_/ |\_\_/\\\_/|\_/   | | | |\_/ \\\_/|\_/ | |\_/\\\_/|\_/\\\_\_/ |                     |
+```
+ $ docker run figlet hola mundo
+```
 
  Overriding ENTRYPOINT
 
@@ -278,9 +261,9 @@ Success!
 
  Details
 
--   You can COPY whole directories recursively.
+-   You can `COP`Y whole directories recursively.
 
--   Older Dockerfiles also have the ADD instruction. It is similar but can automatically extract archives.
+-   Older Dockerfiles also have the `ADD` instruction. It is similar but can automatically extract archives.
 
 -   If we really wanted to compile C code in a compiler, we would:
 
@@ -306,13 +289,11 @@ We have seen simple Dockerfiles to illustrate how Docker build container images.
 
 -   Instructions are cached. If no changes are detected then the instruction is skipped and the cached layer used.
 
--   The FROM instruction MUST be the first non-comment instruction.
+-   The `FROM` instruction MUST be the first non-comment instruction.
 
 -   Lines starting with \# are treated as comments.
 
--   You can only have one CMD and one ENTRYPOINT instruction in a
-
- Dockerfile.
+-   You can only have one CMD and one ENTRYPOINT instruction in a Dockerfile.
 
  The FROM instruction
 
@@ -324,35 +305,35 @@ The FROM instruction
 
 Can specify a base image:
 
- FROM ubuntu
+ `FROM ubuntu`
 
 An image tagged with a specific version:
 
- FROM ubuntu:12.04
+ `FROM ubuntu:12.04`
 
 A user image:
 
- FROM training/sinatra
+ `FROM training/sinatra`
 
 Or self-hosted image:
 
- FROM localhost:5000/funtoo
+` FROM localhost:5000/funtoo`
 
  More about FROM
 
--   The FROM instruction can be specified more than once to build multiple images.
+-   The `FROM` instruction can be specified more than once to build multiple images.
 
- FROM ubuntu:14.04
-
- . . .
-
- FROM fedora:20
+ `FROM ubuntu:14.04`
 
  . . .
 
- Each FROM instruction marks the beginning of the build of a new image.
+ `FROM fedora:20`
 
- The -t command-line parameter will only apply to the last image.
+ . . .
+
+ Each `FROM` instruction marks the beginning of the build of a new image.
+
+ The `-t` command-line parameter will only apply to the last image.
 
 -   If the build fails, existing tags are left unchanged.
 
