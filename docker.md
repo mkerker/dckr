@@ -3,7 +3,7 @@
 * [Lab 1: Our First Containers](#lab-1-our-first-containers)
 * [Lab 2: Background Containers](#lab-2-background-containers)
 * [Lab 3: Restarting and Attaching to Containers](#lab-3-restarting-and-attaching-to-containers)
-* [Lab 4: Understanding Docker Images]
+* [Lab 4: Understanding Docker Images](#lab-4-understanding-docker-images)
 * [Lab 5: Building Images Interactively]
 * [Lab 6: Building Docker Images]
 * [Lab 7: CMD and ENTRYPOINT](#Lab-7-CMD-and-ENTRYPOINT)
