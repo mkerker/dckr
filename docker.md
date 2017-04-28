@@ -4,7 +4,7 @@
 * [Lab 2: Background Containers](#lab-2-background-containers)
 * [Lab 3: Restarting and Attaching to Containers](#lab-3-restarting-and-attaching-to-containers)
 * [Lab 4: Understanding Docker Images](#lab-4-understanding-docker-images)
-* [Lab 5: Building Images Interactively]
+* [Lab 5: Building Images Interactively](#lab-5-building-images-interactively)
 * [Lab 6: Building Docker Images]
 * [Lab 7: CMD and ENTRYPOINT](#Lab-7-CMD-and-ENTRYPOINT)
 * [Lab 8: Copying files during the build]
