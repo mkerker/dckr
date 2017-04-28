@@ -6,8 +6,8 @@
 * Lab 4: Understanding Docker Images
 * Lab 5: Building Images Interactively
 * Lab 6: Building Docker Images
-* Lab 7:
-* Lab 8:
+* [Lab 7: CMD and ENTRYPOINT](#Lab-7-CMD-and-ENTRYPOINT)
+* Lab 8: Copying files during the build
 * Lab 9: Operations with images
 
 ## Lab 1: Our First Containers
