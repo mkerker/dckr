@@ -74,9 +74,9 @@ In other words, we would like to be able to do this:
  $ docker run figlet salut
 ```
 
-We will use the ENTRYPOINT verb in Dockerfile.
+We will use the `ENTRYPOINT` verb in Dockerfile.
 
- Adding ENTRYPOINT to our Dockerfile
+Adding` ENTRYPOINT` to our Dockerfile
 
 Our new Dockerfile will look like this:
 ```
@@ -88,18 +88,18 @@ Our new Dockerfile will look like this:
 
  ENTRYPOINT \["figlet", "-f", "script"\]
 ```
--   ENTRYPOINT defines a base command (and its parameters) for the container.
+-   `ENTRYPOINT` defines a base command (and its parameters) for the container.
 
 -   The command line arguments are appended to those parameters.
 
--   Like CMD, ENTRYPOINT can appear anywhere, and replaces the previous value.
+-   Like `CMD`, `ENTRYPOINT` can appear anywhere, and replaces the previous value.
 
-Why did we use JSON syntax for our ENTRYPOINT?
+Why did we use JSON syntax for our `ENTRYPOINT`?
 
 
  Implications of JSON vs string syntax
 
--   When CMD or ENTRYPOINT use string syntax, they get wrapped in sh -c.
+-   When `CMD` or `ENTRYPOINT` use string syntax, they get wrapped in sh -c.
 
 -   To avoid this wrapping, you must use JSON syntax.
 
@@ -130,19 +130,18 @@ And run it:
 
 Great success!
 
-Using CMD and ENTRYPOINT together
+#### Step 4: Using CMD and ENTRYPOINT together
 
-What if we want to define a default message for our container? Then we will use ENTRYPOINT and CMD together.
+What if we want to define a default message for our container? Then we will use `ENTRYPOINT` and `CMD` together.
 
--   ENTRYPOINT will define the base command for our container.
+-   `ENTRYPOINT` will define the base command for our container.
 
--   CMD will define the default parameter(s) for this command.
+-   `CMD` will define the default parameter(s) for this command.
 
 -   They *both* have to use JSON syntax.
 
- CMD and ENTRYPOINT together
-
 Our new Dockerfile will look like this:
+
 ```
  FROM ubuntu
 
@@ -155,13 +154,13 @@ Our new Dockerfile will look like this:
  CMD \["hello world"\]
 ```
 
--   ENTRYPOINT defines a base command (and its parameters) for the container.
+-   `ENTRYPOINT` defines a base command (and its parameters) for the container.
 
--   If we don't specify extra command-line arguments when starting the container, the value of CMD is appended.
+-   If we don't specify extra command-line arguments when starting the container, the value of `CMD` is appended.
 
--   Otherwise, our extra command-line arguments are used instead of CMD.
+-   Otherwise, our extra command-line arguments are used instead of `CMD`.
 
-Build and test our image
+#### Step 5: Build and test our image
 
 Let's build it:
 ```
@@ -181,7 +180,7 @@ $ docker run figlet
  $ docker run figlet hola mundo
 ```
 
- Overriding ENTRYPOINT
+> Overriding ENTRYPOINT
 
 What if we want to run a shell in our container?
 
@@ -207,8 +206,8 @@ Remember: the *build context* is the directory containing the Dockerfile. In thi
 We want to build a container that compiles a basic "Hello world" program in C. Here is the program, hello.c:
 
 ```
- int main () { puts("Hello, world!"); return 0;
-
+ int main () 
+ { puts("Hello, world!"); return 0;
  }
 ```
 
@@ -222,7 +221,7 @@ On Debian and Ubuntu, the package build-essential will get us a compiler.
 
 When installing it, don't forget to specify the -y flag, otherwise the build will fail (since the build cannot be interactive).
 
-Then we will use COPY to place the source file into the container.
+Then we will use `COPY` to place the source file into the container.
 ```
  FROM ubuntu
 
@@ -249,7 +248,7 @@ Create this Dockerfile.
 
 Success!
 
- COPY and the build cache
+ `COPY` and the build cache
 
 -   Run the build again.
 
@@ -261,7 +260,7 @@ Success!
 
  Details
 
--   You can `COP`Y whole directories recursively.
+-   You can `COPY` whole directories recursively.
 
 -   Older Dockerfiles also have the `ADD` instruction. It is similar but can automatically extract archives.
 
@@ -657,7 +656,7 @@ The dependencies are reinstalled every time, because the build system does not k
 ```
  FROM python
 
- MAINTAINER Docker Education Team <education@docker.com>
+ MAINTAINER Docker Workshop <info@hcs-company.com>
 
  COPY . /src/
 
@@ -675,7 +674,7 @@ Adding the dependencies as a separate step means that Docker can cache more effi
 ```
  FROM python
 
- MAINTAINER Docker Education Team <education@docker.com>
+ MAINTAINER Docker Workshop <info@hcs-company.com>
 
  COPY ./requirements.txt /tmp/requirements.txt
 
