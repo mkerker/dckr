@@ -1,4 +1,4 @@
-# Docker
+# Docker Workshop
 
 * [Lab 1: Our First Containers](#lab-1-our-first-containers)
 * [Lab 2: Background Containers](#lab-2-background-containers)
@@ -8,7 +8,7 @@
 * [Lab 6: Building Docker Images](#lab-6-building-images-with-a-dockerfile)
 * [Lab 7: CMD and ENTRYPOINT](#lab-7-cmd-and-entrypoint)
 * [Lab 8: Copying files during the build](#lab-8-copying-files-during-the-build)
-* [Lab 9: Operations with images]
+* [Lab 9: Operations with images](https://github.com/mkerker/docker-workshopv2/blob/master/docker.md)
 
 ## Lab 1: Our First Containers
 
