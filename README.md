@@ -1,1 +1,1 @@
-# docker-workshopv2
+# Docker Workshop
