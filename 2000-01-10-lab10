@@ -1,0 +1,144 @@
+## Lab 10: Operations with images
+
+--------
+
+# Check Demoan settings !!!! Lab 0
+
+You are already familiar with one command, `docker images`. You can also remove images, tag and untag them.
+
+--------
+
+#### Step 1: Build a new version
+
+First let build the new figlet v3 from Dockerfile, so that we have more versions.
+```
+ $ docker build -t figlet:v3 .
+```
+
+--------
+
+#### Step 2: Removing images and containers
+
+Let's start with removing the image figlet verion 1 (figlet:v1) that takes too much disk space:
+
+```
+$ docker rmi figlet:v1
+Error response from daemon: conflict: unable to remove repository reference "figlet:v1" (must force) - container 3b8931ffdacd is using its referenced image bbc0e5eb5777
+
+```
+
+Docker complains that there are containers using this image. How is this possible? We thought that all our containers are gone.
+Actually, Docker keeps track of all containers, even those that have stopped:
+
+```
+$ docker ps -a
+(OUTPUT)
+```
+
+We can now delete the container:
+
+```
+$ docker rm 292d1e8d5103
+292d1e8d5103
+```
+
+and the image:
+
+```
+$ docker rmi figlet:v1
+
+
+output
+
+```
+
+--------
+
+#### Step 3: Tagging images
+
+`docker tag` helps us to tag images.
+
+We have a lot of versions of `figlet` built, but latest still points to the old `v1`.
+
+```
+$ docker images | grep figlet
+figlet                                             v2                  bbc0e5eb5777        2 days ago          170 MB
+figlet                                             v3                  bbc0e5eb5777        2 days ago          170 MB
+figlet                                             latest              b7fa8e20196b        2 days ago          170 MB
+figlet                                             v1                  b7fa8e20196b        2 days ago          170 MB
+```
+
+Let's change that by re-tagging `latest` to `v7`:
+
+```
+$ docker tag hello:v7 hello:latest
+$ docker images | grep hello
+
+```
+
+Both `v7` and `latest` point to the same image ID `d0ec3cfed6f7`.
+
+--------
+
+#### Step 4: Publishing images
+
+Images are distributed with a special service - `docker registry`.
+Let us spin up a local registry:
+
+```
+$ docker run -p 5000:5000 --name registry -d registry:2
+```
+
+`docker push` is used to publish images to registries.
+
+To instruct where we want to publish, we need to append registry address to repository name:
+
+```
+$ docker tag figlet:v3 127.0.0.1:5000/figlet:v3
+$ docker push 127.0.0.1:5000/figlet:v3
+```
+
+`docker push` pushed the image to our "remote" registry.
+
+--------
+
+#### Step 5: Stop all dockers containers and images
+
+Enter the following commands to clean up:
+
+```
+# docker stop $(ps docker -q -a | grep figlet)
+# Delete every Docker containers
+# Must be run first because images are attached to containers
+$ docker rm -f $(docker ps -a -q | grep figlet)
+
+# Delete every Docker image
+$ docker rmi -f $(docker images -q | grep figlet)
+```
+See that the figlet images are removed.
+
+```
+$ docker images -q | grep figlet
+```
+
+--------
+
+#### Step 6: PULL the image from registry
+
+We can now download the image using the `docker pull` command:
+
+```
+$ docker pull 127.0.0.1:5000/figlet
+v3: Pulling from figlet
+Digest: sha256:c472a7ec8ab2b0db8d0839043b24dbda75ca6fa8816cfb6a58e7aaf3714a1423
+Status: Image is up to date for 127.0.0.1:5000/figlet
+```
+
+and see that it is pulled.
+
+```
+$ docker images
+```
+
+Repeat **Step 2** if you want a clean envoirement. 
+
