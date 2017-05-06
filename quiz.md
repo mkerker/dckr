@@ -73,6 +73,70 @@ docker ps shows all containers by default
 ### docker ps shows all running containers by default.
 
 
+When creating a Dockerfile, which instruction is used to declare the base image?
+
+### IMPORT <base image>
 
 
+FROM <base image>
 
+DOCKER IMPORT <base image>
+
+None of the above
+
+What is the difference between a Docker image and a Docker container?
+
+Those terms are synonymous
+
+
+A Docker container is a runtime instance of an image
+
+#### A Docker image is a runtime instance of a container
+
+Docker images are managed within a Docker container
+
+Which of the following can be used to purge all stopped containers?
+
+
+### docker rm $(docker ps -a -q)
+
+docker rm -f stop-all
+
+docker delete all
+
+docker —delete
+
+
+Which of the following is the command used to restart a Docker image?
+
+
+### docker start <imageId>
+
+docker restart <imageId>
+
+An image is not restarted it is merely a union of layered filesystems.
+
+docker-restart <imageId>
+
+What happens when the following command is executed: "docker build --rm=true -t rhtgptetraining/lovelxc ."
+
+This is an invalid command
+
+
+#### Docker attempts to build an image from a Dockerfile that presumably exists in the current directory
+
+Docker attempts to spin up a container with a tag name of: rhtgptetraining/lovelxc
+
+Docker attempts to build a container called: rhtgptetraining/lovelxc
+
+Which of the following could be used to smoke test the Docker service?
+
+docker test hello-world
+
+docker smoketest
+
+
+### docker run hello-world
+
+
+none of the above
